@@ -60,6 +60,9 @@ export default {
       },
     };
   },
+  created() {
+    document.title = "资源共享--登录";
+  },
   methods: {
     regOrLogin(){
       let l=this.isLogin;
