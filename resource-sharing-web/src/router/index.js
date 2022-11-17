@@ -9,6 +9,8 @@ import CateView from '../views/CateView.vue'
 import MessageView from '../views/MessageView.vue'
 import MyView from '../views/MyView.vue'
 
+// my
+import AddArticle from '../components/My/AddArticle.vue'
 
 Vue.use(VueRouter)
 
@@ -23,7 +25,11 @@ const routes = [
       { path: '/follow', component: FollowView, name: '关注', fullPath: '/home/follow', meta: { title: '关注' }, },
       { path: '/cate', component: CateView, name: '分类', fullPath: '/home/cate', meta: { title: '分类' }, },
       { path: '/message', component: MessageView, name: '消息', fullPath: '/home/message', meta: { title: '消息' }, },
-      { path: '/my', component: MyView, name: '我的', fullPath: '/home/my', meta: { title: '我的' }, },
+      {
+        path: '/my', component: MyView, name: '我的', fullPath: '/home/my', meta: { title: '我的' }, children: [//子路由
+          { path: '/addArticle', component: AddArticle, name: '我要分享', fullPath: '/home/index/addArticle', meta: { title: '我要分享' }, },
+        ]
+      },
     ]
   }
 ]

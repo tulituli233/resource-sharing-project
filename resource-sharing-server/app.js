@@ -48,8 +48,8 @@ app.use('/ours', userRouter);
 // const userinfoRouter = require('./router/userinfo');
 // app.use('/my', userinfoRouter);
 
-// const cartRouter = require('./router/cart');
-// app.use('/my/cart', cartRouter);
+const articleRouter = require('./router/article');
+app.use('/my/article', articleRouter);
 
 // const homeRouter = require('./router/home');
 // app.use('/my/home', homeRouter);

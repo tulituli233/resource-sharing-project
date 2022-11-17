@@ -88,7 +88,8 @@ export default {
           if (res.meta.status !== 200)
             return this.$message.error(res.meta.message);
           this.$message.success(res.meta.message);
-          window.sessionStorage.setItem("token", res.data);
+          window.sessionStorage.setItem("token", res.data.token);
+          window.sessionStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
           // alert(res.data.token);
           this.$router.push("/home");
         } catch (e) {

@@ -16,7 +16,7 @@ const address=joi.string().required();
 const phone=joi.string().pattern(/^[0-9]{6,11}$/).required();
 const email=joi.string().email().required();
 
-exports.updata_userinfo_schema={
+exports.add_article_schema={
     body:{
         nickname,
         address,
