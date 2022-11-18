@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -8,7 +9,8 @@ export default new Vuex.Store({
         count: 100,
         visitedViews: [],
         routes: [],
-        Nav:''
+        Nav: '',
+        indexArticleList: [],
     },
     mutations: {
         add(state) {
@@ -30,9 +32,12 @@ export default new Vuex.Store({
                 }
             }
         },
-        saveNav(state,val){
-            state.Nav=val
-        }
+        saveNav(state, val) {
+            state.Nav = val
+        },
+        indexArticleList(state, val) {
+            state.indexArticleList = val
+        },
     },
     actions: {
         addViewAsy(context, route) {
@@ -43,11 +48,27 @@ export default new Vuex.Store({
         },
         delView({ dispatch, state }, view) {
             return new Promise(resolve => {
-              dispatch('delViewAsy', view)
-              resolve({
-                visitedViews: [...state.visitedViews],
-              })
+                dispatch('delViewAsy', view)
+                resolve({
+                    visitedViews: [...state.visitedViews],
+                })
             })
-          },
+        },
+        indexArticleListAys(context, ial) {
+            context.commit('indexArticleList', ial)
+        },
     },
+    /* vuex数据持久化配置 */
+    plugins: [
+        createPersistedState({
+            // 存储方式：localStorage、sessionStorage、cookies
+            storage: window.sessionStorage,
+            // 存储的 key 的key值
+            key: "store",
+            reducer(state) { //render错误修改
+                // 要存储的数据：本项目采用es6扩展运算符的方式存储了state中所有的数据
+                return { ...state };
+            }
+        })
+    ]
 })

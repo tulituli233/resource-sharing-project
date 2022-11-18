@@ -9,6 +9,6 @@ const {reg_login_schema}=require('../schema/user');
 
 router.post('/add',articleHander.add);
 
-router.post('/login',articleHander.login);
+router.post('/alist',articleHander.alist);
 
 module.exports=router;

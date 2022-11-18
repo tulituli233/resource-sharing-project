@@ -2,32 +2,60 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-exports.regUser = (req, res) => {
-    // console.log(1);
-    const userinfo = req.body;
-    const sqlStr = 'select * from user where Username=?';
-    // console.log(sqlStr);
-    db.query(sqlStr, userinfo.Username, (err, results) => {
-        if (err) {
-            return res.cc(err);
-        }
-        // //用户名已存在
-        if (results.length > 0) {
-            return res.cc('用户名已被占用，请更换其他用户名！', 301);
-        }
-        // console.log(2);
-        //用户名可用
-        userinfo.Password = bcrypt.hashSync(userinfo.Password, 10);
-        const sqladd = 'insert into user set ?';
-        db.query(sqladd, { Username: userinfo.Username, Password: userinfo.Password }, (err, results) => {
-            if (err) {
-                return res.cc(err);
+exports.alist = (req, res) => {
+    // console.log(req.body);
+    //判断使用哪条sql和数组select * from ev_artide_cate where name=?
+    let sqlGetArt = '';
+    let data = [];
+    // if(req.body.__proto__===undefined)Object.setPrototypeOf(req.body, new Object());
+    // console.log(req.body);
+    if (req.body.cate === '' && req.body.mark === '') {
+        sqlGetArt = 'select * from article where ArticleState=1';
+        // console.log(1);
+    }
+    if (req.body.cate === '' && req.body.mark !== '') {
+        sqlGetArt = 'select * from article where Title like ? and ArticleState=1';
+        data = ['%' + req.body.mark + '%'];
+        // console.log(1);
+    }
+    if (req.body.cate !== '' && req.body.mark === '') {
+        sqlGetArt = 'select * from article where CateNum=? and ArticleState=1';
+        data = [req.body.cate];
+    }
+    if (req.body.cate !== '' && req.body.mark !== '') {
+        sqlGetArt = 'select * from article where CateNum=? and Title like ? and ArticleState=1';
+        data = [req.body.cate, '%' + req.body.mark + '%'];
+    }
+
+    db.query(sqlGetArt, data, (err, results) => {
+        // console.log(results);
+        if (err) return res.cc(err);
+        if (results.length < 1) return res.cc('没有所需文章数据！');
+        //(i-1)*j:slice||j~i*j-1截取数组
+        let i = req.body.pagenum;
+        // console.log("i="+i);
+        let j = req.body.pagesize;
+        // console.log("j="+j);
+        // let arts=results.slice((i-1)*j,i*j-1);
+        // let arts = results.slice((i - 1) * j, i * j);//前开始，后结束，不包括结束
+        // console.log(arts);
+        let arts = [];
+        let total = results.length;
+
+        if (total == 0) {
+            res.cc('没有相关数据!', 301, { alist: arts, total })
+        } else {
+            try {
+                arts = results.slice((i - 1) * j, i * j);
+            } catch (e) {
+                if (articleList.size() < j) {
+                    arts = results
+                } else {
+                    arts = results.slice((i - 1) * j, total);
+                }
             }
-            if (results.affectedRows !== 1) {
-                return res.cc('用户注册失败！请稍后再试！', 301);
-            }
-            res.cc('注册成功！', 200);
-        })
+        }
+        res.cc('获取文章列表成功!', 200, { alist: arts, total })
     })
 }
 

@@ -9,6 +9,8 @@ import './assets/css/global.css'
 import TreeTable from 'vue-table-with-tree-grid';//树表
 import VueQuillEditor from 'vue-quill-editor';//富文本编辑器
 // import DragTable from './components/test/drag-table'//拖拽表格
+import ArticleList from './components/Article/ArticleList.js'
+Vue.use(ArticleList);
 
 //导入富文本编辑器样式
 import 'quill/dist/quill.core.css' // import styles

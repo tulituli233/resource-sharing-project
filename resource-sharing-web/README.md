@@ -38,3 +38,10 @@ CateName varchar(10)
 FirstImgUrl varchar(255) 
 ReTime varchar(18)
  -->
+
+ <!-- 
+ cate string 文章分类
+mark string 搜索关键词
+pagnum int 分页页数
+pagsize int 分页大小
+ -->
