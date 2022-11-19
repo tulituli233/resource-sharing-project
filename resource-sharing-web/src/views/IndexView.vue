@@ -13,26 +13,30 @@ export default {
   data() {
     return {
       queryInfo: {
-        cate: '',
-        mark: '',
+        cate: "",
+        mark: "",
         pagenum: 1,
         pagesize: 10,
       },
-    }
+    };
   },
   created() {
     document.title = "资源共享--首页";
     this.getArticleList();
   },
   methods: {
-    async getArticleList(){
-      const { data: res } = await this.$http.post("/my/article/alist", this.queryInfo);
+    async getArticleList() {
+      const { data: res } = await this.$http.post(
+        "/my/article/alist",
+        this.queryInfo
+      );
       console.log(res.data.alist);
       if (res.meta.status !== 200) return this.$message.error(res.meta.message);
       this.$message.success(res.meta.message);
       this.$store.dispatch("indexArticleListAys", res.data.alist);
+      // this.$store.commit("indexArticleList", res.data.alist);
       // window.sessionStorage.setItem("token", res.data);
-    }
+    },
   },
 };
 </script>

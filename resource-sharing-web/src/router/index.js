@@ -8,6 +8,7 @@ import FollowView from '../views/FollowView.vue'
 import CateView from '../views/CateView.vue'
 import MessageView from '../views/MessageView.vue'
 import MyView from '../views/MyView.vue'
+import ArticleView from '../views/ArticleView.vue'
 
 // my
 import AddArticle from '../components/My/AddArticle.vue'
@@ -30,6 +31,7 @@ const routes = [
           { path: '/addArticle', component: AddArticle, name: '我要分享', fullPath: '/home/index/addArticle', meta: { title: '我要分享' }, },
         ]
       },
+      { path: '/article', component: ArticleView, name: '文章详情', fullPath: '/home/article', meta: { title: '文章详情' }, },
     ]
   }
 ]

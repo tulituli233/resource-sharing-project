@@ -1,6 +1,17 @@
 <template>
   <div class="ArticleListBox">
-    <div class="listitem" v-for="(item,i) in alist" :key="i" v-html="item.Content"></div>
+    <div
+      class="listitem"
+      v-for="(item, i) in alists"
+      :key="i"
+      @click="toArticle(item.ArticleId)"
+    >
+      <img :src="item.FirstImgUrl" alt="" />
+      <div class="articleInfo">
+        <h4>{{ item.Title }}</h4>
+        <div class="brief">{{ item.Brief }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,10 +24,55 @@ export default {
     };
   },
   created() {
-    this.alist = this.$store.state.indexArticleList;
+    // this.$nextTick(() => {
+    //   this.alist = this.$store.state.indexArticleList;
+    //   console.log(222);
+    //   console.log(this.alist);
+    // });
+    // console.log(111);
+    // console.log(this.alist);
+  },
+  computed: {
+    alists() {
+      return this.$store.state.indexArticleList;
+    },
+  },
+  methods: {
+    async toArticle(ArticleId) {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      const { data: res } = await this.$http.get("/my/article/geta", {
+        params: {
+          ArticleId: ArticleId,
+          BuyerId: userInfo.id,
+        },
+      });
+      console.log(res);
+      // alert(res);
+      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
+      this.$message.success(res.meta.message);
+      this.$store.dispatch("saveArticleAys", res.data.Article);
+      this.$router.push("/article");
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.ArticleListBox {
+  .listitem {
+    // width: 100px;
+    // height: 100px;
+    // display: flex;
+    overflow: hidden;
+    img {
+      width: 100px;
+      height: 100px;
+      float: left;
+    }
+    .articleInfo {
+      float: left;
+      padding-left: 10px;
+    }
+  }
+}
 </style>
