@@ -94,4 +94,61 @@ Tags varchar(255) 标签
 Brief varchar(255) 简介
  -->
 
+ <!-- 
+ CommentId int AI PK 
+ArticleId int 
+FromId int 
+ToId int 
+HasReply tinyint 
+CommentContent varchar(255) 
+Likes int 
+CommentType tinyint 
+CreateTime varchar(18) 
+ReTime varchar(18) 
+OnId int
+  -->
+
+<!-- 
+ArticleId int 文章ID
+FromId int 评论者ID
+ToId int 被评论者ID
+CommentContent varchar(255) 评论内容
+CommentType tinyint 评论为0、回复为1、删除为2
+CreateTime varchar(18) 
+OnId int 在哪个评论下
+FromName varchar(20) 
+ToName varchar(20)
+ -->
+
+
+<!-- 
+
+FollowerId int PK 
+WriterId int 
+WriterName varchar(20) 
+FollowState tinyint 
+CreateTime varchar(18) 
+ReTime varchar(18)
+ -->
+
+
+ <!-- UserId int AI PK 
+Username varchar(20) 
+Password varchar(255) 
+Integral int 
+Email varchar(30) 
+Phone varchar(20) 
+Brief varchar(255) -->
  
+<!-- data:array<note> 
+NoteId int 记录ID
+userId int 用户ID
+WriterId int 作者ID
+WriterName varchar(20) 作者名
+ArticleId int 文章ID
+Title varchar(45) 文章标题
+NoteType tinyint 记录类型，0历史，1收藏，2购买,3删除
+CateNum varchar(10) 分类编号
+CateName varchar(10) 分类名称
+CreateTime varchar(18) 
+ReTime varchar(18) -->

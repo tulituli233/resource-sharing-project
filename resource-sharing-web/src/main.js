@@ -13,6 +13,8 @@ import ArticleList from './components/Article/ArticleList.js'
 Vue.use(ArticleList);
 import Article from './components/Article/Article.js'
 Vue.use(Article);
+import Comment from './components/Article/Comment.js'
+Vue.use(Comment);
 
 //导入富文本编辑器样式
 import 'quill/dist/quill.core.css' // import styles

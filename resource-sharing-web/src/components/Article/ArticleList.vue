@@ -4,7 +4,7 @@
       class="listitem"
       v-for="(item, i) in alists"
       :key="i"
-      @click="toArticle(item.ArticleId)"
+      @click="toArticle(item.ArticleId, item.IssuerId)"
     >
       <img :src="item.FirstImgUrl" alt="" />
       <div class="articleInfo">
@@ -38,7 +38,12 @@ export default {
     },
   },
   methods: {
-    async toArticle(ArticleId) {
+    async toArticle(ArticleId, IssuerId) {
+      this.getArticle(ArticleId);
+      this.getCommentList(ArticleId, IssuerId);
+      this.$router.push("/article");
+    },
+    async getArticle(ArticleId) {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.get("/my/article/geta", {
         params: {
@@ -51,7 +56,18 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.message);
       this.$message.success(res.meta.message);
       this.$store.dispatch("saveArticleAys", res.data.Article);
-      this.$router.push("/article");
+    },
+    async getCommentList(ArticleId, IssuerId) {
+      const { data: res } = await this.$http.get("/my/comment/list", {
+        params: {
+          ArticleId,
+          IssuerId,
+        },
+      });
+      console.log(res.data.clist);
+      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
+      this.$message.success(res.meta.message);
+      this.$store.dispatch("saveCommentAys", res.data.clist);
     },
   },
 };

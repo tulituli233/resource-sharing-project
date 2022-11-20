@@ -12,6 +12,7 @@ export default new Vuex.Store({
         Nav: '',
         indexArticleList: [],
         Article:{},
+        Comment:[],
     },
     mutations: {
         add(state) {
@@ -42,6 +43,9 @@ export default new Vuex.Store({
         saveArticle(state, val) {
             state.Article = val
         },
+        saveComment(state, val) {
+            state.Comment = val
+        },
     },
     actions: {
         addViewAsy(context, route) {
@@ -63,6 +67,9 @@ export default new Vuex.Store({
         },
         saveArticleAys(context, Article) {
             context.commit('saveArticle', Article)
+        },
+        saveCommentAys(context, Comment) {
+            context.commit('saveComment', Comment)
         },
     },
     /* vuex数据持久化配置 */
