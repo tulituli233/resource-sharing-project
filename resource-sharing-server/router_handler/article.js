@@ -10,20 +10,20 @@ exports.alist = (req, res) => {
     // if(req.body.__proto__===undefined)Object.setPrototypeOf(req.body, new Object());
     // console.log(req.body);
     if (req.body.cate === '' && req.body.mark === '') {
-        sqlGetArt = 'select * from article where ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where ArticleState=1';
         // console.log(1);
     }
     if (req.body.cate === '' && req.body.mark !== '') {
-        sqlGetArt = 'select * from article where Title like ? and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where Title like ? and ArticleState=1';
         data = ['%' + req.body.mark + '%'];
         // console.log(1);
     }
     if (req.body.cate !== '' && req.body.mark === '') {
-        sqlGetArt = 'select * from article where CateNum=? and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum=? and ArticleState=1';
         data = [req.body.cate];
     }
     if (req.body.cate !== '' && req.body.mark !== '') {
-        sqlGetArt = 'select * from article where CateNum=? and Title like ? and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum=? and Title like ? and ArticleState=1';
         data = [req.body.cate, '%' + req.body.mark + '%'];
     }
 
@@ -179,7 +179,7 @@ function saveImg(imgData) {
 exports.add = (req, res) => {
     const article = req.body;
     let newContent = saveImg(article.Content);
-    console.log(article);
+    // console.log(article);
     article.Content = newContent;
     // console.log('newContent=====',newContent);
     cateList.forEach(item => {
@@ -202,23 +202,52 @@ exports.add = (req, res) => {
     })
 }
 
-exports.login = (req, res) => {
-    const userinfo = req.body;
-    let sqllogin = '';
-    sqllogin = 'select * from user where Username=?';
-    db.query(sqllogin, userinfo.Username, (err, results) => {
+exports.geta = (req, res) => {
+    const Article = req.query;
+    console.log(Article);
+    let sqlSelectO = 'select * from orders where BuyerId=? and ArticleId=?';
+    db.query(sqlSelectO, [Article.BuyerId, Article.ArticleId], (err, results) => {
         if (err) return res.cc(err);
-        if (results.length !== 1) return res.cc('登陆失败,该用户不存在！');
-        const compareResult = bcrypt.compareSync(userinfo.Password, results[0].Password);
-        if (!compareResult) {
-            return res.cc('登陆失败，密码错误！', 301);
+        let sqlSelectA = '';
+        if (results.length !== 1) {
+            sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where ArticleId=? and ArticleState=1';
+        } else {
+            sqlSelectA = 'select * from article where ArticleId=?';
         }
-        const id = results[0].UserId;
-        // console.log('id='+id);
-        const user = { id, Username: userinfo.Username };
-        const tokenStr = jwt.sign(user, config.jwtSecretKey, {
-            expiresIn: '24h',
-        });
-        res.cc('登录成功！', 200, 'Bearer ' + tokenStr)
+        db.query(sqlSelectA, Article.ArticleId, (err, results) => {
+            if (err) return res.cc(err);
+            if (results.length !== 1) return res.cc('没有找到该文章', 301);
+            res.cc('查找成功！', 200, { Article: results[0] })
+        })
+        // res.cc('查找成功！', 200, { Article: results[0] })
+    })
+}
+
+exports.delete = (req, res) => {
+    const Article = req.query;
+    let sqlDel = 'update article set ArticleState=0 where ArticleId=?';
+    db.query(sqlDel, Article.ArticleId, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.affectedRows !== 1) return res.cc('删除失败！', 301);
+        res.cc('删除成功！', 200)
+    })
+}
+
+exports.updata = (req, res) => {
+    const ArticleUpdata = req.body;
+    let newContent = saveImg(ArticleUpdata.Content);
+    // console.log(article);
+    ArticleUpdata.Content = newContent;
+    // console.log('newContent=====',newContent);
+    cateList.forEach(item => {
+        if (item.value == ArticleUpdata.CateNum) {
+            ArticleUpdata.CateName = item.label;
+        }
+    })
+    let sqlUpdata = 'update article set Title=?,Content=?,LianJie=?,Price=?,CateNum=?,CateName=?,Tags=?,Brief=? where ArticleId=?';
+    db.query(sqlUpdata, ArticleUpdata, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.affectedRows !== 1) return res.cc('修改失败！', 301);
+        res.cc('修改成功！', 200)
     })
 }

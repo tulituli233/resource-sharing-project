@@ -11,4 +11,10 @@ router.post('/add',articleHander.add);
 
 router.post('/alist',articleHander.alist);
 
+router.get('/geta',articleHander.geta);
+
+router.get('/delete',articleHander.delete);
+
+router.post('/updata',articleHander.updata);
+
 module.exports=router;

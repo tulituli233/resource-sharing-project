@@ -45,17 +45,14 @@ const { UnauthorizedError } = require('express-jwt/lib');
 const userRouter = require('./router/user');
 app.use('/ours', userRouter);
 
-// const userinfoRouter = require('./router/userinfo');
-// app.use('/my', userinfoRouter);
-
 const articleRouter = require('./router/article');
 app.use('/my/article', articleRouter);
 
-// const homeRouter = require('./router/home');
-// app.use('/my/home', homeRouter);
+const commentRouter = require('./router/comment');
+app.use('/my/comment', commentRouter);
 
-// const ordersRouter = require('./router/orders');
-// app.use('/my/orders', ordersRouter);
+const buyRouter = require('./router/buy');
+app.use('/my/buy', buyRouter);
 
 // app.use(function (err, req, res, next) {//错误级别中间件
 //     if (err instanceof joi.ValidationError) return res.cc(err);
