@@ -54,6 +54,9 @@ app.use('/my/comment', commentRouter);
 const buyRouter = require('./router/buy');
 app.use('/my/buy', buyRouter);
 
+const userinfoRouter = require('./router/userinfo');
+app.use('/my/userinfo', userinfoRouter);
+
 // app.use(function (err, req, res, next) {//错误级别中间件
 //     if (err instanceof joi.ValidationError) return res.cc(err);
 //     if (err.name === 'UnauthorizedError') return res.cc('身份认证失败1！')

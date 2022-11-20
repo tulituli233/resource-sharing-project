@@ -89,16 +89,29 @@ exports.addnote = (req, res) => {
         }
     })
     console.log(note);
-    const sqladd = 'insert into note set ?';
-    db.query(sqladd, note, (err, results) => {
-        if (err) {
-            return res.cc(err);
+    const sqlStr = 'select * from note where UserId=? and ArticleId=?';
+    db.query(sqlStr, [note.UserId, note.ArticleId], (err, results) => {
+        if (err) return res.cc(err);
+        let sqladd = ''
+        let data = ''
+        if (results.length !== 1) {
+            sqladd = 'insert into note set ?';
+            data = note;
+        } else {
+            sqladd = 'update note set ReTime=? where UserId=? and ArticleId=?';
+            data = [note.ReTime, note.UserId, note.ArticleId]
         }
-        if (results.affectedRows !== 1) {
-            return res.cc('关注失败!', 301);
-        }
-        res.cc('关注成功!', 200);
+        db.query(sqladd, data, (err, results) => {
+            if (err) {
+                return res.cc(err);
+            }
+            if (results.affectedRows !== 1) {
+                return res.cc('足迹添加失败!', 301);
+            }
+            res.cc('足迹添加成功!', 200);
+        })
     })
+
 }
 
 exports.footmark = (req, res) => {
