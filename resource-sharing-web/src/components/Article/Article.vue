@@ -89,6 +89,8 @@ export default {
     margin-top: 0;
   }
   .IssuerBox {
+    background-color: #ebebeb;
+    padding: 10px;
     .followBtn {
       margin-left: 20px;
       border-radius: 5px;

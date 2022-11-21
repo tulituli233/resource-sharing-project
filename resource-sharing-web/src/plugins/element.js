@@ -1,6 +1,6 @@
 import Vue from 'vue'//plugins插件
 import { Button,MessageBox,Tag,Select,Option,Cascader,Alert,Tabs,TabPane,Steps,Step,Upload,Timeline,TimelineItem,Popconfirm } from 'element-ui'
-import {Form,FormItem,Row,Col,Table,TableColumn,Switch,Tooltip,Pagination,Dialog,Tree,CheckboxGroup,Checkbox,Loading} from 'element-ui'
+import {Form,FormItem,Row,Col,Table,TableColumn,Switch,Tooltip,Pagination,Dialog,Tree,CheckboxGroup,Checkbox,Loading,Rate} from 'element-ui'
 import {Input,Message,Container,Header,Aside,Main,Menu,Submenu,MenuItem,Breadcrumb,BreadcrumbItem,Card,Progress,InputNumber} from 'element-ui'
 
 Vue.use(Button)
@@ -44,6 +44,7 @@ Vue.use(Progress)
 Vue.use(Popconfirm)
 Vue.use(InputNumber)
 Vue.use(Loading)
+Vue.use(Rate)
 
 Vue.prototype.$message=Message//prototype原型
 Vue.prototype.$confirm=MessageBox

@@ -263,13 +263,14 @@ export default {
       });
       //   console.log(this.addFrom);
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      let tags=this.addFrom.tags.join(',')+',';
       const { data: res } = await this.$http.post("/my/article/add", {
         IssuerId: userInfo.id,
         IssuerName: userInfo.username,
         Title: this.addFrom.title,
         Brief: this.addFrom.brief,
         Price: this.addFrom.price,
-        Tags: this.addFrom.tags.join(),
+        Tags: tags,
         CateNum: this.addFrom.cate[this.addFrom.cate.length - 1],
         Content: this.addFrom.content,
         LianJie: this.addFrom.LianJie,
