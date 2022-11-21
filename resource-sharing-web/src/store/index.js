@@ -13,6 +13,7 @@ export default new Vuex.Store({
         indexArticleList: [],
         Article:{},
         Comment:[],
+        ArticleInfo:{},
     },
     mutations: {
         add(state) {
@@ -45,6 +46,9 @@ export default new Vuex.Store({
         },
         saveComment(state, val) {
             state.Comment = val
+        },
+        saveArticleInfo(state, val) {
+            state.ArticleInfo = val
         },
     },
     actions: {

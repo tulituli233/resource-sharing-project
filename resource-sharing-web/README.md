@@ -152,3 +152,28 @@ CateNum varchar(10) 分类编号
 CateName varchar(10) 分类名称
 CreateTime varchar(18) 
 ReTime varchar(18) -->
+
+
+<!-- 
+ArticleId int 
+FromId int 
+ToId int 
+HasReply tinyint 
+CommentContent varchar(255) 
+Likes int 
+CommentType tinyint 
+CreateTime varchar(18) 
+ReTime varchar(18) 
+OnId int 
+FromName varchar(20) 
+ToName varchar(20)
+ -->
+
+
+ <!-- 
+ FollowerId int PK 
+WriterId int 
+WriterName varchar(20) 
+FollowState tinyint 
+CreateTime varchar(18) 
+ReTime varchar(18) -->

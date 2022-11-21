@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <Article></Article>
-    <Comment></Comment>
+  <div class="ArticleViewBox">
+    <div class="ArticleLeftBox">
+      <Article></Article>
+      <Comment></Comment>
+    </div>
+    <div class="ArticleRightBox"></div>
   </div>
 </template>
 
@@ -14,4 +17,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ArticleViewBox {
+  overflow: hidden;
+  .ArticleLeftBox {
+    float: left;
+    width: 800px;
+  }
+  .ArticleRightBox{}
+}
 </style>

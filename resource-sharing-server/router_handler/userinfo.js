@@ -128,15 +128,28 @@ exports.addFollow = (req, res) => {
     const follow = req.body;
     follow.ReTime = follow.CreateTime;
     console.log(follow);
-    const sqladd = 'insert into follow set ?';
-    db.query(sqladd, follow, (err, results) => {
-        if (err) {
-            return res.cc(err);
+    let sqlSelectF = 'select * from follow where FollowerId=? and WriterId=?';
+    db.query(sqlSelectF, [follow.FollowerId, follow.WriterId], (err, results) => {
+        if (err) return res.cc(err);
+        let sqladd = '';
+        let Data = '';
+        if (results.length !== 1) {
+            sqladd = 'insert into follow set ?';
+            Data = follow;
+        } else {
+            sqladd = 'update follow set FollowState=?,ReTime=? where FollowerId=? and WriterId=?';
+            Data = [follow.FollowState, follow.ReTime, follow.FollowerId, follow.WriterId]
         }
-        if (results.affectedRows !== 1) {
-            return res.cc('关注失败!', 301);
-        }
-        res.cc('关注成功!', 200);
+        console.log(sqladd);
+        db.query(sqladd, Data, (err, results) => {
+            if (err) {
+                return res.cc(err);
+            }
+            if (results.affectedRows !== 1) {
+                return res.cc(follow.FollowState == 0 ? '取关失败!' : '关注失败!', 301);
+            }
+            res.cc(follow.FollowState == 0 ? '取关成功!' : '关注成功!', 200);
+        })
     })
 }
 
@@ -153,8 +166,8 @@ exports.followlist = (req, res) => {
 
 exports.unfollow = (req, res) => {
     const follow = req.query;
-    let sqlDel = 'update follow set FollowType=0 where FollowId=? and WriterId=?';
-    db.query(sqlDel, [follow.FollowId, follow.WriterId], (err, results) => {
+    let sqlDel = 'update follow set FollowState=0 where FollowerId=? and WriterId=?';
+    db.query(sqlDel, [follow.FollowerId, follow.WriterId], (err, results) => {
         if (err) return res.cc(err);
         if (results.affectedRows !== 1) return res.cc('取消关注失败！', 301);
         res.cc('取消关注成功！', 200)
@@ -173,5 +186,16 @@ exports.updata = (req, res) => {
             return res.cc('资料修改失败!', 301);
         }
         res.cc('资料修改成功!', 200);
+    })
+}
+
+exports.isfollow = (req, res) => {
+    const follow = req.query;
+    // console.log(follow);
+    let sqlSelectF = 'select * from follow where FollowerId=? and WriterId=? and FollowState!=0';
+    db.query(sqlSelectF, [follow.FollowerId, follow.WriterId], (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length !== 1) return res.cc('没有关注！', 301);
+        res.cc('已关注！', 200)
     })
 }

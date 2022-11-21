@@ -17,4 +17,6 @@ router.get('/footmark',userinfoHander.footmark);
 
 router.post('/addnote',userinfoHander.addnote);
 
+router.get('/isfollow',userinfoHander.isfollow);
+
 module.exports=router;

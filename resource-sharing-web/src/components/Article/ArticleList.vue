@@ -4,7 +4,7 @@
       class="listitem"
       v-for="(item, i) in alists"
       :key="i"
-      @click="toArticle(item.ArticleId, item.IssuerId)"
+      @click="toArticle(item.ArticleId, item.IssuerId, item.IssuerName)"
     >
       <img :src="item.FirstImgUrl" alt="" />
       <div class="articleInfo">
@@ -38,9 +38,16 @@ export default {
     },
   },
   methods: {
-    async toArticle(ArticleId, IssuerId) {
-      this.getArticle(ArticleId);
-      this.getCommentList(ArticleId, IssuerId);
+    async toArticle(ArticleId, IssuerId, IssuerName) {
+      // this.getArticle(ArticleId);
+      let ArticleInfo = {
+        ArticleId,
+        IssuerId,
+        IssuerName,
+      };
+      // this.getCommentList(ArticleId, IssuerId);
+      this.$store.commit("saveArticleInfo", ArticleInfo);
+      // this.$store.commit("saveIssuerId", IssuerId);
       this.$router.push("/article");
     },
     async getArticle(ArticleId) {
@@ -57,11 +64,10 @@ export default {
       this.$message.success(res.meta.message);
       this.$store.dispatch("saveArticleAys", res.data.Article);
     },
-    async getCommentList(ArticleId, IssuerId) {
+    async getCommentList(ArticleId) {
       const { data: res } = await this.$http.get("/my/comment/list", {
         params: {
           ArticleId,
-          IssuerId,
         },
       });
       console.log(res.data.clist);

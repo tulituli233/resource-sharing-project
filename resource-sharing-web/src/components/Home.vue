@@ -53,7 +53,7 @@
         </el-menu>
       </el-aside>
       <!-- 右侧 -->
-      <el-main>
+      <el-main :style="`height:${newHeight}px`">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -109,14 +109,23 @@ export default {
           id: 995,
         },
       ],
+      newHeight: 800,
       // Nav:''
     };
+  },
+  computed: {
+    
   },
   components: {
     tagsView,
   },
   created() {
     this.getMenuList();
+    this.newHeight = window.innerHeight - 150;
+    window.onresize = () => {
+      this.newHeight = window.innerHeight - 130;
+      // console.log(this.newHeight);
+    };
     // this.Nav=window.sessionStorage.getItem('Nav');//侧边栏选中项
     // this.Nav=this.$store.state.Nav
   },
@@ -184,6 +193,8 @@ const token = window.sessionStorage.getItem("token");
   }
   .el-main {
     background-color: #eaedf1;
+    width: 1200px;
+    height: 600px;
   }
 
   .el-submenu__icon-arrow {
