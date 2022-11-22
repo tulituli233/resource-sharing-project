@@ -1,9 +1,32 @@
 <template>
   <el-container class="home-container">
     <el-header>
-      <div>
+      <div class="logoBox">
         <!-- <img src="../assets/heima.png" alt="" />
         <span>电商后台管理系统</span> -->
+      </div>
+      <!-- 顶部搜索框 -->
+      <div class="TopSelectBox">
+        <el-input
+          placeholder="请输入内容"
+          v-model="inputTopVal"
+          class="input-with-select"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="toCateView(inputTopVal)"
+          ></el-button>
+        </el-input>
+        <!-- <router-link
+          ref="item"
+          class="memuItem"
+          :to="{ path: '/cate', fullPath: '/home/cate' }"
+          v-slot="{ navigate, isActive }"
+        >
+                <NavLink
+              ></NavLink> 
+        </router-link> -->
       </div>
       <el-button type="info" @click="tuichu">退出</el-button>
       <tagsView>1234</tagsView>
@@ -110,12 +133,11 @@ export default {
         },
       ],
       newHeight: 800,
+      inputTopVal: "",
       // Nav:''
     };
   },
-  computed: {
-    
-  },
+  computed: {},
   components: {
     tagsView,
   },
@@ -157,6 +179,16 @@ export default {
       this.$store.commit("saveNav", val);
       // this.$router.push(val);
     },
+    toCateView(inputTopVal) {
+      // this.$store.commit("saveinputTopVal", inputTopVal);
+      // console.log(this.$store.state.inputTopVal);
+      // this.$router.push(`/cate?inpVal=${inputTopVal}&t=${Date.now()}`);
+      // if (inputTopVal == "") return this.$message.error('请输入搜索内容！');
+      try {
+        this.$router.replace(`/cate?inpVal=${inputTopVal}&t=${Date.now()}`);
+      } catch (e) {}
+      this.inputTopVal = "";
+    },
   },
 };
 const token = window.sessionStorage.getItem("token");
@@ -179,6 +211,9 @@ const token = window.sessionStorage.getItem("token");
       span {
         margin-left: 15px;
       }
+    }
+    .TopSelectBox {
+      width: 500px;
     }
   }
   .el-aside {

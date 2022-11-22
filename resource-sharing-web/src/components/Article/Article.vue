@@ -62,6 +62,7 @@ export default {
     },
     async addFollow() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      if (userInfo.id == this.$store.state.ArticleInfo.IssuerId) return this.$message.error("不能关注自己");
       const { data: res } = await this.$http.post("/my/userinfo/follow", {
         FollowerId: userInfo.id,
         WriterId: this.$store.state.ArticleInfo.IssuerId,

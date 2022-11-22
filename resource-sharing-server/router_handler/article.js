@@ -8,7 +8,7 @@ exports.alist = (req, res) => {
     let sqlGetArt = '';
     let data = [];
     // if(req.body.__proto__===undefined)Object.setPrototypeOf(req.body, new Object());
-    // console.log(req.body);
+    console.log(req.body);
     if (req.body.cate === '' && req.body.mark === '') {
         sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where ArticleState=1';
         // console.log(1);

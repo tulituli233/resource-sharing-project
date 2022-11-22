@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ArticleList></ArticleList>
+    <ArticleList :queryInfo="queryInfo"></ArticleList>
   </div>
 </template>
 
@@ -16,13 +16,14 @@ export default {
         cate: "",
         mark: "",
         pagenum: 1,
-        pagesize: 10,
+        pagesize: 5,
+        hasSelect:false,
       },
     };
   },
   created() {
     document.title = "资源共享--首页";
-    this.getArticleList();
+    // this.getArticleList();
   },
   methods: {
     async getArticleList() {

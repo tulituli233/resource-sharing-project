@@ -48,6 +48,7 @@
         >
           <div class="nameAndTime">
             <span>{{ item1.FromName }}</span>
+            <span>&nbsp;&nbsp;回复：{{item1.ToName}}</span>
             <div class="UpBox">
               <span>点赞</span><br /><span>{{ item1.Likes }}</span>
             </div>
