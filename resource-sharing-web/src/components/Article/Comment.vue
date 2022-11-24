@@ -172,9 +172,11 @@ export default {
 
 <style lang="less" scoped>
 .commentBox {
-  width: 500px;
+  width: 750px;
+  padding: 10px;
+  box-shadow: 10px 10px 5px #ccc;
   .commentItem {
-    width: 100%;
+    // width: 100%;
     padding: 10px;
     border-bottom: 1px solid #666;
     .nameAndTime {

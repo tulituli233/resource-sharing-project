@@ -22,7 +22,7 @@
             class="CateItem"
             v-for="(item, i) in this.$store.state.CateList"
             :key="i"
-            @click="erjiCate(item.value)"
+            @click="erjiCate(item.value, item.label)"
           >
             <div class="yijiCate">
               {{ item.label }}
@@ -32,7 +32,7 @@
                 class="erjiCate"
                 v-for="(item1, i1) in item.children"
                 :key="i1"
-                @click.stop="erjiCate(item1.value)"
+                @click.stop="erjiCate(item1.value, item1.label)"
               >
                 {{ item1.label }}
               </div>
@@ -40,7 +40,26 @@
           </div>
         </div>
       </div>
-      <ArticleList :queryInfo="queryInfo"></ArticleList>
+      <div class="midCateBox">分类：{{ selectName }}</div>
+      <div v-if="ArticleList.length">
+        <ArticleList :ArticleList="ArticleList"></ArticleList>
+      </div>
+      <div class="noDataBox" v-else>
+        <!-- 暂时没有关于<span style="color: red">{{ queryInfo.mark}}</span
+        >的文章 -->
+        这里还什么都没有呢~
+      </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="ArticleList.length"
+      >
+      </el-pagination>
+      <div :m="markstr"></div>
     </div>
   </div>
 </template>
@@ -49,42 +68,82 @@
 export default {
   created() {
     document.title = "资源共享--分类";
+    this.getArticleList();
     // let inpVal = this.$route.query.inpVal;
     // this.queryInfo.mark = inpVal == undefined ? "" : inpVal;
     // console.log(inpVal);
   },
   data() {
     return {
-      Cate: {
+      queryInfo: {
         cate: "",
         mark: "",
         pagenum: 1,
         pagesize: 5,
         hasSelect: true,
       },
+      ArticleList: [],
+      selectName: "全部",
     };
   },
   computed: {
-    queryInfo() {
+    markstr() {
       let inpVal = this.$route.query.inpVal;
       let mark = inpVal == undefined ? "" : inpVal;
       console.log(inpVal);
-      let queryInfo = {
-        cate: "",
-        mark: mark,
-        pagenum: 1,
-        pagesize: 5,
-        hasSelect: true,
-      };
-      console.log(queryInfo);
+      if (inpVal !== undefined) {
+        this.queryInfo.cate = "";
+        // this.selectName = "全部";
+        this.queryInfo.mark = mark;
+      } else {
+      }
+      // console.log(queryInfo);
+      this.getArticleList();
+      // console.log(21);
       // this.queryInfo=queryInfo;
-      return queryInfo;
+      return mark;
     },
   },
   methods: {
-    erjiCate(CateNum) {
+    erjiCate(CateNum, CateName) {
       this.queryInfo.cate = CateNum;
-      console.log(this.queryInfo);
+      this.selectName = CateName;
+      // this.getArticleList();
+    },
+    async getArticleList() {
+      const { data: res } = await this.$http.post(
+        "/my/article/alist",
+        this.queryInfo
+      );
+
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        this.ArticleList = [];
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
+      console.log(res.data.alist);
+      let alists = [];
+      if (typeof res.data.alist[0].Tags == "string") {
+        alists = res.data.alist.map((item) => {
+          item.Tags = item.Tags.split(",");
+          item.Tags.pop();
+          return item;
+        });
+      }
+      this.ArticleList = alists;
+      // this.$store.dispatch("indexArticleListAys", res.data.alist);
+      // this.$store.commit("indexArticleList", res.data.alist);
+      // window.sessionStorage.setItem("token", res.data);
+    },
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize;
+      this.getArticleList();
+    },
+    handleCurrentChange(newPage) {
+      this.queryInfo.pagenum = newPage;
+      this.getArticleList();
     },
   },
 };
@@ -119,6 +178,9 @@ export default {
             border-radius: 5px;
             margin-right: 5px;
           }
+          &:hover .yijiCate {
+            border: 1px solid red;
+          }
           &:hover .erjiCateBox {
             display: block;
             z-index: 10;
@@ -146,6 +208,9 @@ export default {
               border-radius: 5px;
               margin-right: 5px;
               // display: block;
+              &:hover {
+                border: 1px solid yellow;
+              }
             }
           }
           .erjiCate1 {
@@ -154,6 +219,15 @@ export default {
         }
       }
     }
+  }
+  .midCateBox {
+    padding: 10px;
+  }
+  .noDataBox {
+    width: 800px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align-last: center;
   }
 }
 </style>

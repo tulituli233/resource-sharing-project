@@ -19,12 +19,12 @@ exports.alist = (req, res) => {
         // console.log(1);
     }
     if (req.body.cate !== '' && req.body.mark === '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum=? and ArticleState=1';
-        data = [req.body.cate];
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and ArticleState=1';
+        data = ['%' + req.body.cate + '%'];
     }
     if (req.body.cate !== '' && req.body.mark !== '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum=? and Title like ? and ArticleState=1';
-        data = [req.body.cate, '%' + req.body.mark + '%'];
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and Title like ? and ArticleState=1';
+        data = ['%' + req.body.cate + '%', '%' + req.body.mark + '%'];
     }
 
     db.query(sqlGetArt, data, (err, results) => {

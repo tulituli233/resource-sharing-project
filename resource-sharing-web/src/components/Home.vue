@@ -8,7 +8,7 @@
       <!-- 顶部搜索框 -->
       <div class="TopSelectBox">
         <el-input
-          placeholder="请输入内容"
+          :placeholder="pstr"
           v-model="inputTopVal"
           class="input-with-select"
         >
@@ -28,8 +28,13 @@
               ></NavLink> 
         </router-link> -->
       </div>
-      <el-button type="info" @click="tuichu">退出</el-button>
-      <tagsView>1234</tagsView>
+      <div class="UserBox">
+        <el-avatar size="large" class="avatar">{{username}}</el-avatar>
+        <el-button type="info" @click="tuichu" class="el-icon-switch-button"
+          >退出</el-button
+        >
+      </div>
+      <tagsView></tagsView>
     </el-header>
     <el-container>
       <!-- 左侧 -->
@@ -78,6 +83,10 @@
       <!-- 右侧 -->
       <el-main :style="`height:${newHeight}px`">
         <router-view></router-view>
+        <!-- 分享榜单 -->
+        <div class="recommendBox">
+          <Recommend></Recommend>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -90,6 +99,9 @@ export default {
   name: "Home",
   data() {
     return {
+      circleUrl:
+        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      pstr: "请输入内容",
       menulist: [],
       iconsObj: {
         999: "el-icon-user-solid",
@@ -108,7 +120,7 @@ export default {
           id: 999,
         },
         {
-          authName: "关注",
+          authName: "动态",
           path: "/follow",
           fullPath: "/home/follow",
           id: 998,
@@ -137,7 +149,12 @@ export default {
       // Nav:''
     };
   },
-  computed: {},
+  computed: {
+    username(){
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      return userInfo.username;
+    }
+  },
   components: {
     tagsView,
   },
@@ -183,11 +200,13 @@ export default {
       // this.$store.commit("saveinputTopVal", inputTopVal);
       // console.log(this.$store.state.inputTopVal);
       // this.$router.push(`/cate?inpVal=${inputTopVal}&t=${Date.now()}`);
-      // if (inputTopVal == "") return this.$message.error('请输入搜索内容！');
+      if (inputTopVal == "") return this.$message.error("请输入搜索内容！");
       try {
         this.$router.replace(`/cate?inpVal=${inputTopVal}&t=${Date.now()}`);
       } catch (e) {}
+      let istr = this.inputTopVal;
       this.inputTopVal = "";
+      this.pstr = istr;
     },
   },
 };
@@ -205,6 +224,7 @@ const token = window.sessionStorage.getItem("token");
     align-items: center;
     color: #fff;
     font-size: 20px;
+    // overflow: hidden;
     > div {
       display: flex;
       align-items: center;
@@ -214,6 +234,12 @@ const token = window.sessionStorage.getItem("token");
     }
     .TopSelectBox {
       width: 500px;
+    }
+    .UserBox {
+      .avatar {
+        margin-right: 20px;
+        background-color: #3a8ee6;
+      }
     }
   }
   .el-aside {
@@ -230,6 +256,14 @@ const token = window.sessionStorage.getItem("token");
     background-color: #eaedf1;
     width: 1200px;
     height: 600px;
+    position: relative;
+    .recommendBox{
+      width: 300px;
+      position: absolute;
+      top: 0;
+      left: 420px;
+      padding-top: 20px;
+    }
   }
 
   .el-submenu__icon-arrow {

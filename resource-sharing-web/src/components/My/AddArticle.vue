@@ -97,8 +97,8 @@ export default {
   data() {
     return {
       addFrom: {
-        title: "qq",
-        brief: "qq",
+        title: "",
+        brief: "",
         price: 0,
         tags: ["视频"],
         inputVisible: false,
@@ -106,7 +106,7 @@ export default {
         //商品分类
         cate: [],
         content: "",
-        LianJie: "qq",
+        LianJie: "https://pan.baidu.com/s/KVSKNEIGBSLA",
       },
       addFromRules: {
         title: [

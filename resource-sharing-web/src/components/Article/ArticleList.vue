@@ -1,60 +1,54 @@
 <template>
   <div class="ArticleListBox">
-    <div v-if="alists">
-      <div
-        class="listitem"
-        v-for="(item, i) in alists"
-        :key="i"
-        @click="toArticle(item.ArticleId, item.IssuerId, item.IssuerName)"
-      >
-        <div class="ImgBox">
-          <img :src="item.FirstImgUrl" alt="" />
-          <el-rate
-            v-model="item.Grade"
-            disabled
-            show-score
-            text-color="#ff9900"
-            :score-template="item.Grade + ''"
-          >
-          </el-rate>
-          <el-row class="IconRow"
-            ><span>点赞</span>{{ item.Likes }}<span class="viewsIcon">浏览</span
-            >{{ item.Views }}</el-row
-          >
-        </div>
-        <div class="articleInfo">
-          <div class="IssuerBox">
-            <span class="spanName">{{ item.IssuerName }}</span>
-          </div>
-          <span class="TitleSpan">{{ item.Title }}</span>
-          <div class="brief">简介:{{ item.Brief }}</div>
-          <div class="TagBox">
-            标签:
-            <el-tag
-              size="mini"
-              type="warning"
-              class="eltagItem"
-              v-for="(item1, i1) in item.Tags"
-              :key="i1"
-              >{{ item1 }}
-            </el-tag>
-          </div>
-        </div>
-        <div class="cateBox">{{ item.CateName }}</div>
-        <div class="priceBox" :class="item.Price == 0 ? 'cGreen' : 'cYellow'">
-          {{ item.Price == 0 ? "免费" : `$${item.Price}` }}
-        </div>
-        <span
-          class="spanTime"
-          v-text="toTime(item.CreateTime)"
-        ></span>
+    <div
+      class="listitem"
+      v-for="(item, i) in ArticleList"
+      :key="i"
+      @click="toArticle(item.ArticleId, item.IssuerId, item.IssuerName)"
+    >
+      <div class="ImgBox">
+        <img :src="item.FirstImgUrl" alt="" />
+        <el-rate
+          v-model="item.Grade"
+          disabled
+          show-score
+          text-color="#ff9900"
+          :score-template="item.Grade + ''"
+        >
+        </el-rate>
+        <el-row class="IconRow"
+          ><span>点赞</span>{{ item.Likes }}<span class="viewsIcon">浏览</span
+          >{{ item.Views }}</el-row
+        >
       </div>
+      <div class="articleInfo">
+        <div class="IssuerBox">
+          <span class="spanName">{{ item.IssuerName }}</span>
+        </div>
+        <span class="TitleSpan">{{ item.Title }}</span>
+        <div class="brief">简介:{{ item.Brief }}</div>
+        <div class="TagBox">
+          标签:
+          <el-tag
+            size="mini"
+            type="warning"
+            class="eltagItem"
+            v-for="(item1, i1) in item.Tags"
+            :key="i1"
+            >{{ item1 }}
+          </el-tag>
+        </div>
+      </div>
+      <div class="cateBox">{{ item.CateName }}</div>
+      <div class="priceBox" :class="item.Price == 0 ? 'cGreen' : 'cYellow'">
+        {{ item.Price == 0 ? "免费" : `$${item.Price}` }}
+      </div>
+      <span class="spanTime" v-text="toTime(item.CreateTime)"></span>
     </div>
-    <div class="noDataBox" v-else>
-      暂时没有关于<span style="color: red">{{ queryInfo.mark }}</span
-      >的文章
-    </div>
-    <div class="hasSelect" v-if="queryInfo.hasSelect"><div :a="inputTopVal" :c="CateVal"></div></div>
+
+    <!-- <div class="hasSelect" v-if="queryInfo.hasSelect">
+      <div :a="inputTopVal" :c="CateVal"></div>
+    </div> -->
   </div>
 </template>
 
@@ -70,9 +64,12 @@ export default {
           mark: "",
           pagenum: 1,
           pagesize: 10,
-          hasSelect:false,
+          hasSelect: false,
         };
       },
+    },
+    ArticleList: {
+      type: Array,
     },
   },
   data() {
@@ -89,7 +86,7 @@ export default {
     };
   },
   created() {
-    this.getArticleList();
+    // this.getArticleList();
     // console.log(1);
     // this.$nextTick(() => {
     //   this.alist = this.$store.state.indexArticleList;
@@ -99,27 +96,21 @@ export default {
     // console.log(111);
     // console.log(this.alist);
   },
-  change(){
-    this.queryInfo={
-      ...this.queryInfo,
-    }
-    this.$forceUpdate();
-  },
   computed: {
-    inputTopVal() {
-      console.log(321);
-      // this.queryInfo.mark = this.$store.state.inputTopVal;
-      // this.queryInfo.mark
-      this.getArticleList();
-      return this.queryInfo.mark;
-    },
-    CateVal() {
-      console.log(321);
-      // this.queryInfo.mark = this.$store.state.inputTopVal;
-      // this.queryInfo.mark
-      this.getArticleList();
-      return this.queryInfo.cate;
-    },
+    // inputTopVal() {
+    //   console.log(321);
+    //   // this.queryInfo.mark = this.$store.state.inputTopVal;
+    //   // this.queryInfo.mark
+    //   this.getArticleList();
+    //   return this.queryInfo.mark;
+    // },
+    // CateVal() {
+    //   console.log(321);
+    //   // this.queryInfo.mark = this.$store.state.inputTopVal;
+    //   // this.queryInfo.mark
+    //   this.getArticleList();
+    //   return this.queryInfo.cate;
+    // },
     // alists() {
     //   // let indexArticleList = this.$store.state.indexArticleList;
     //   // console.log(typeof indexArticleList[0].Tags);
@@ -207,7 +198,7 @@ export default {
 
 <style lang="less" scoped>
 .ArticleListBox {
-  width: 800px;
+  // width: 800px;
   border: 1px solid #ccc;
   padding: 10px;
   .listitem {
@@ -247,6 +238,7 @@ export default {
       }
       .brief {
         height: 57px;
+        width: 600px;
       }
       .TagBox {
         color: #e6a23c;
@@ -280,9 +272,6 @@ export default {
       right: 0;
       padding: 5px;
     }
-  }
-  .noDataBox {
-    text-align-last: center;
   }
 }
 </style>

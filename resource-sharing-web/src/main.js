@@ -15,6 +15,10 @@ import Article from './components/Article/Article.js'
 Vue.use(Article);
 import Comment from './components/Article/Comment.js'
 Vue.use(Comment);
+import FootMarkList from './components/FootMark/FootMarkList.js'
+Vue.use(FootMarkList);
+import Recommend from './components/Recommend.js'
+Vue.use(Recommend);
 
 //导入富文本编辑器样式
 import 'quill/dist/quill.core.css' // import styles

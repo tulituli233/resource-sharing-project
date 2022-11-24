@@ -76,7 +76,7 @@ const cateList = [
         label: "流行",
     },
     {
-        value: "F001",
+        value: "F",
         label: "其他",
     },
 ]
@@ -94,6 +94,7 @@ exports.addnote = (req, res) => {
         if (err) return res.cc(err);
         let sqladd = ''
         let data = ''
+        // console.log(results);
         if (results.length !== 1) {
             sqladd = 'insert into note set ?';
             data = note;
@@ -101,14 +102,16 @@ exports.addnote = (req, res) => {
             sqladd = 'update note set ReTime=? where UserId=? and ArticleId=?';
             data = [note.ReTime, note.UserId, note.ArticleId]
         }
+        let iORu = results.length;
+        // console.log(sqladd);
         db.query(sqladd, data, (err, results) => {
             if (err) {
                 return res.cc(err);
             }
             if (results.affectedRows !== 1) {
-                return res.cc('足迹添加失败!', 301);
+                return res.cc(iORu==1?'足迹修改失败!':'足迹添加失败!', 301);
             }
-            res.cc('足迹添加成功!', 200);
+            res.cc(iORu==1?'足迹修改成功!':'足迹添加成功!', 200);
         })
     })
 
@@ -116,10 +119,12 @@ exports.addnote = (req, res) => {
 
 exports.footmark = (req, res) => {
     const footmark = req.query;
-    const sqlStr = 'select * from note where UserId=? and NoteType!=3';
-    db.query(sqlStr, footmark.UserId, (err, results) => {
+    const sqlStr = 'select * from note where userId=? and NoteType=?';
+    // console.log(footmark);
+    db.query(sqlStr, [footmark.UserId,footmark.NoteType], (err, results) => {
         if (err) return res.cc(err);
-        if (results.length !== 1) return res.cc('没有数据！', 301);
+        // console.log(results);
+        if (results.length == 0) return res.cc('没有数据！', 301);
         res.cc('足迹列表获取成功！', 200, { footmarkList: results, total: results.length })
     })
 }
@@ -159,7 +164,7 @@ exports.followlist = (req, res) => {
     let sqlSelectF = 'select * from follow where FollowerId=? and FollowState!=0';
     db.query(sqlSelectF, [follow.FollowerId], (err, results) => {
         if (err) return res.cc(err);
-        if (results.length !== 1) return res.cc('没有数据！', 301);
+        if (results.length == 0) return res.cc('没有数据！', 301);
         res.cc('关注列表获取成功！', 200, { followlist: results, total: results.length })
     })
 }
@@ -195,7 +200,7 @@ exports.isfollow = (req, res) => {
     let sqlSelectF = 'select * from follow where FollowerId=? and WriterId=? and FollowState!=0';
     db.query(sqlSelectF, [follow.FollowerId, follow.WriterId], (err, results) => {
         if (err) return res.cc(err);
-        if (results.length !== 1) return res.cc('没有关注！', 301);
+        if (results.length == 0) return res.cc('没有关注！', 301);
         res.cc('已关注！', 200)
     })
 }

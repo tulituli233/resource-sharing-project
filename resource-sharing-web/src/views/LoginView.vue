@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       form: {
-        name: "admin",
+        name: "",
         password: "123456",
       },
       isLogin: true,
@@ -51,7 +51,7 @@ export default {
       rules: {
         name: [
           { required: true, message: "请输入用户名称", trigger: "blur" }, //trigger触发事件
-          { min: 3, max: 10, message: "长度在3到10个字符", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在3到10个字符", trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入用户密码", trigger: "blur" },
