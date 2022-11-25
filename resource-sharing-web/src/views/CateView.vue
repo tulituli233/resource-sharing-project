@@ -53,10 +53,10 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[5, 10, 15, 20]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="ArticleList.length"
+        :total="totle"
       >
       </el-pagination>
       <div :m="markstr"></div>
@@ -83,6 +83,7 @@ export default {
         hasSelect: true,
       },
       ArticleList: [],
+      totle: 0,
       selectName: "全部",
     };
   },
@@ -133,6 +134,7 @@ export default {
         });
       }
       this.ArticleList = alists;
+      this.totle = res.data.total;
       // this.$store.dispatch("indexArticleListAys", res.data.alist);
       // this.$store.commit("indexArticleList", res.data.alist);
       // window.sessionStorage.setItem("token", res.data);
@@ -172,14 +174,15 @@ export default {
         width: 400px;
         .CateItem {
           float: left;
+          color: #fff;
           .yijiCate {
             padding: 5px;
-            border: 1px solid rgb(43, 173, 243);
+            background-color: rgb(43, 173, 243);
             border-radius: 5px;
             margin-right: 5px;
           }
           &:hover .yijiCate {
-            border: 1px solid red;
+            background-color: red;
           }
           &:hover .erjiCateBox {
             display: block;
@@ -204,12 +207,12 @@ export default {
             .erjiCate {
               float: left;
               padding: 5px;
-              border: 1px solid rgb(54, 255, 121);
+              background-color: rgb(54, 255, 121);
               border-radius: 5px;
               margin-right: 5px;
               // display: block;
               &:hover {
-                border: 1px solid yellow;
+                background-color: #e6a23c;
               }
             }
           }

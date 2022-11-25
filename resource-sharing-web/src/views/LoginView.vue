@@ -43,7 +43,7 @@ export default {
     return {
       form: {
         name: "",
-        password: "123456",
+        password: "",
       },
       isLogin: true,
       tipStr:'去注册',

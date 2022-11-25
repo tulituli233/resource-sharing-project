@@ -179,3 +179,11 @@ CreateTime varchar(18)
 ReTime varchar(18) -->
 
 
+<!-- 
+Email varchar(30) 邮箱 
+Phone varchar(20) 手机号
+Brief varchar(255) 简介
+UserId int 用户ID 
+ -->
+
+

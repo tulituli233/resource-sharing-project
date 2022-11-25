@@ -17,7 +17,7 @@
         >
         </el-rate>
         <el-row class="IconRow"
-          ><span>点赞</span>{{ item.Likes }}<span class="viewsIcon">浏览</span
+          ><span class="iconfont icon-dianzan"></span>{{ item.Likes }}<span class="viewsIcon el-icon-view"></span
           >{{ item.Views }}</el-row
         >
       </div>
@@ -216,8 +216,14 @@ export default {
       }
       .IconRow {
         padding: 5px 0;
+        .iconfont{
+          width: 20px;
+          height: 20px;
+          padding-right: 10px;
+        }
         .viewsIcon {
           margin-left: 20px;
+          padding-right: 10px;
         }
       }
     }
@@ -264,7 +270,7 @@ export default {
       background-color: rgb(59, 223, 59);
     }
     .cYellow {
-      background-color: rgb(255, 255, 39);
+      background-color: #fca60b;
     }
     .spanTime {
       position: absolute;

@@ -35,7 +35,7 @@ export default {
       queryInfo: {
         cate: "",
         mark: "",
-        pagenum: 1,
+        pagenum: 2,
         pagesize: 5,
         hasSelect: true,
       },

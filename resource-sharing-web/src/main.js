@@ -6,6 +6,8 @@ import axios from 'axios'
 import store from './store'
 
 import './assets/css/global.css'
+import './assets/icon/iconfont.css'
+
 import TreeTable from 'vue-table-with-tree-grid';//树表
 import VueQuillEditor from 'vue-quill-editor';//富文本编辑器
 // import DragTable from './components/test/drag-table'//拖拽表格

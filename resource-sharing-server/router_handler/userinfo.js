@@ -183,7 +183,7 @@ exports.updata = (req, res) => {
     const userInfo = req.body;
     console.log(userInfo);
     const sqlUpdata = 'update user set Email=?,Phone=?,Brief=? where UserId=?';
-    db.query(sqlUpdata, [userInfo.Email, userInfo.Phone, userInfo.Brief], (err, results) => {
+    db.query(sqlUpdata, [userInfo.Email, userInfo.Phone, userInfo.Brief, userInfo.UserId], (err, results) => {
         if (err) {
             return res.cc(err);
         }
