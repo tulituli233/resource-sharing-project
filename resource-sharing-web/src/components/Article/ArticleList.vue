@@ -244,7 +244,7 @@ export default {
       }
       .brief {
         height: 57px;
-        width: 600px;
+        width: 580px;
       }
       .TagBox {
         color: #e6a23c;

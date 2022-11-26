@@ -17,4 +17,6 @@ router.get('/delete',articleHander.delete);
 
 router.post('/updata',articleHander.updata);
 
+router.get('/getmyshare',articleHander.getMyShare);
+
 module.exports=router;

@@ -34,8 +34,8 @@ export default {
       FollowList: [],
       queryInfo: {
         cate: "",
-        mark: "",
-        pagenum: 2,
+        mark: "软考",
+        pagenum: 1,
         pagesize: 5,
         hasSelect: true,
       },
@@ -57,7 +57,7 @@ export default {
         return;
         this.$message.error(res.meta.message);
       }
-      this.$message.success(res.meta.message);
+      // this.$message.success(res.meta.message);
       this.FollowList = res.data.followlist;
     },
     async getArticleList() {

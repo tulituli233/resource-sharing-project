@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="titleBOx">我要分享</div>
     <el-form
       :model="addFrom"
       :rules="addFromRules"
@@ -56,7 +57,7 @@
           >+ 新标签</el-button
         >
       </el-form-item>
-      <el-form-item label="商品分类" prop="cate">
+      <el-form-item label="资源分类" prop="cate">
         <el-cascader
           v-model="addFrom.cate"
           :options="CateList"
@@ -333,5 +334,13 @@ export default {
 }
 .tag-item {
   margin-left: 10px;
+}
+.titleBOx{
+  padding: 10px;
+  background-color: #007acc;
+}
+.btnAdd{
+  margin: 10px;
+  float: right;
 }
 </style>

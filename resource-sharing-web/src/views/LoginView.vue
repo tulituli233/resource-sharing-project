@@ -1,9 +1,9 @@
 <template>
   <div class="login_container">
     <div class="login_box">
-      <div class="avatar_box">
+      <!-- <div class="avatar_box">
         <img src="../assets/logo.png" alt="" />
-      </div>
+      </div> -->
       <div class="regOrLogin" @click="regOrLogin">
         <span>{{ tipStr }}</span>
       </div>

@@ -1,5 +1,6 @@
 <template>
   <div class="CollectionBox">
+    <div class="titleBOx">我的收藏</div>
     <FootMarkList :footmarkList="footmarkList"></FootMarkList>
   </div>
 </template>
@@ -40,5 +41,9 @@ export default {
 <style lang="less" scoped>
 .CollectionBox {
   // width: 800px;
+}
+.titleBOx{
+  padding: 10px;
+  background-color: #007acc;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="HistoryBox">
+    <div class="titleBOx">历史记录</div>
     <FootMarkList :footmarkList="footmarkList"></FootMarkList>
   </div>
 </template>
@@ -40,5 +41,9 @@ export default {
 <style lang="less" scoped>
 .HistoryBox {
   // width: 800px;
+}
+.titleBOx{
+  padding: 10px;
+  background-color: #007acc;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="OrderBox">
+    <div class="titleBOx">我的购买</div>
     <FootMarkList :footmarkList="footmarkList"></FootMarkList>
   </div>
 </template>
@@ -41,5 +42,9 @@ export default {
 <style lang="less" scoped>
 .OrderBox {
   // width: 800px;
+}
+.titleBOx{
+  padding: 10px;
+  background-color: #007acc;
 }
 </style>

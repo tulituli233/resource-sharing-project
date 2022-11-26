@@ -132,7 +132,7 @@ export default {
           id: 997,
         },
         {
-          authName: "信息",
+          authName: "消息",
           path: "/message",
           fullPath: "/home/message",
           id: 996,

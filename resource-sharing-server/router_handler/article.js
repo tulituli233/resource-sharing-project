@@ -251,3 +251,15 @@ exports.updata = (req, res) => {
         res.cc('修改成功！', 200)
     })
 }
+exports.getMyShare = (req, res) => {
+    const User = req.query;
+    console.log(User);
+    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where IssuerId=? and ArticleState=1';
+    db.query(sqlSelectA, User.IssuerId, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length == 0) return res.cc('你还没有分享资源', 301);
+        let arts = results;
+        let total = results.length;
+        res.cc('查找我的分享成功！', 200, { alist: arts, total })
+    })
+}

@@ -27,11 +27,12 @@
       <div class="nameAndTime">
         <span>{{ item.FromName }}</span>
         <div class="UpBox">
-          <span>点赞</span><br /><span>{{ item.Likes }}</span>
+          <span class="iconfont icon-dianzan"></span
+          ><span>{{ item.Likes==0?'':item.Likes }}</span>
         </div>
         <div class="huifuBtn">
           <button @click="toHuifu(item.FromId, item.FromName, item.CommentId)">
-            <span>X</span>回复
+            <i class="el-icon-chat-dot-square"></i>回复
           </button>
         </div>
         <br />
@@ -48,15 +49,16 @@
         >
           <div class="nameAndTime">
             <span>{{ item1.FromName }}</span>
-            <span>&nbsp;&nbsp;回复：{{item1.ToName}}</span>
+            <span>&nbsp;&nbsp;回复：{{ item1.ToName }}</span>
             <div class="UpBox">
-              <span>点赞</span><br /><span>{{ item1.Likes }}</span>
+              <span class="iconfont icon-dianzan"></span
+              ><span>{{ item1.Likes==0?'':item1.Likes }}</span>
             </div>
             <div class="huifuBtn">
               <button
                 @click="toHuifu(item1.FromId, item1.FromName, item.CommentId)"
               >
-                <span>X</span>回复
+                <i class="el-icon-chat-dot-square"></i>回复
               </button>
             </div>
             <br />
@@ -126,8 +128,12 @@ export default {
       console.log(comment);
       const { data: res } = await this.$http.post("/my/comment/add", comment);
       //   console.log(res);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
-      this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
       this.CommentInfo.CommentContent = "";
       this.getCommentList();
     },
@@ -160,8 +166,12 @@ export default {
         },
       });
       console.log(res.data.clist);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
-      this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
       this.Comment = res.data.clist;
       this.toComment();
       // this.$store.commit("saveComment", res.data.clist);
@@ -181,7 +191,7 @@ export default {
     border-bottom: 1px solid #666;
     .nameAndTime {
       &:hover .huifuBtn {
-        width: 50px;
+        width: 70px;
         height: 21px;
       }
       color: #888;
@@ -191,6 +201,14 @@ export default {
       .UpBox {
         float: right;
         text-align: center;
+        .iconfont {
+          width: 20px;
+          height: 20px;
+          padding-right: 10px;
+        }
+        // span{
+        //   width: 20px;
+        // }
       }
       .huifuBtn {
         width: 0;
@@ -201,6 +219,9 @@ export default {
         button {
           border: none;
           font-size: 14px;
+          i {
+            margin-right: 3px;
+          }
         }
       }
     }

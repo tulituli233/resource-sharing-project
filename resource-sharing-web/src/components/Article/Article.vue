@@ -3,12 +3,19 @@
     <h2>{{ Article.Title }}</h2>
     <div class="IssuerBox">
       <span>作者：{{ Article.IssuerName }}</span
-      ><button class="followBtn" @click="addFollow">
-        <span>+</span>{{ isfollow == 0 ? "关注" : "已关注" }}
+      ><button class="followBtn" :class="isfollow == 0 ? '':'followed'" @click="addFollow">
+        {{ isfollow == 0 ? "+ 关注" : "已关注" }}
       </button>
     </div>
     <div class="ContentBox" v-html="Article.Content">{{ Article.Content }}</div>
-    <div class="LianjieBox">资源链接：{{Article.LianJie==null?'你还没有兑换该分享！':Article.LianJie}}</div>
+    <div class="LianjieBox">
+      资源链接：{{
+        Article.LianJie == null
+          ? "该资源为积分资源，你还没有兑换该资源！"
+          : Article.LianJie
+      }}
+      <el-button class="BuyBtn" size="mini" type="success">兑换</el-button>
+    </div>
   </div>
 </template>
 
@@ -41,8 +48,12 @@ export default {
       });
       console.log(res);
       // alert(res);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
-      this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
       this.Article = res.data.Article;
       this.addNote();
       // this.$store.dispatch("saveArticleAys", res.data.Article);
@@ -56,9 +67,15 @@ export default {
         },
       });
       console.log(res);
-      if (res.meta.status !== 200) {
-        this.isfollow = 0;
+      // if (res.meta.status !== 200) {
+      //   this.isfollow = 0;
+      //   return;
+      // }
+      this.isfollow = 0;
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
         return;
+        this.$message.error(res.meta.message);
       }
       this.isfollow = 1;
     },
@@ -74,8 +91,12 @@ export default {
         CreateTime: Date.now() + "",
       });
       console.log(res);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
-      this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
       this.isFollow();
     },
     async addNote() {
@@ -92,8 +113,12 @@ export default {
         CreateTime: Date.now() + "",
       });
       console.log(res);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
-      this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
     },
   },
 };
@@ -116,10 +141,21 @@ export default {
       margin-left: 20px;
       border-radius: 5px;
     }
+    .followed{
+      background-color: pink;
+      border-color: pink;
+      color: #fff;
+    }
   }
   .ContentBox {
     img {
       width: 500px;
+    }
+  }
+  .LianjieBox{
+    overflow: hidden;
+    .BuyBtn{
+      float: right;
     }
   }
 }

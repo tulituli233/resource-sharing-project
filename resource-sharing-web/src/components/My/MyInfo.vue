@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="titleBOx">编辑资料</div>
     <el-form
       :model="addFrom"
       :rules="addFromRules"
@@ -67,7 +68,7 @@ export default {
     };
   },
   created() {
-    document.title = "资源共享--我的资料";
+    document.title = "资源共享--编辑资料";
   },
   methods: {
     updataInfo(formName) {
@@ -94,4 +95,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.titleBOx{
+  padding: 10px;
+  background-color: #007acc;
+}
 </style>
