@@ -125,7 +125,8 @@ export default {
         ToName: this.CommentInfo.ToName,
         CreateTime: Date.now() + "",
       };
-      console.log(comment);
+      console.log('comment',1);
+      alert('comment1')
       const { data: res } = await this.$http.post("/my/comment/add", comment);
       //   console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
