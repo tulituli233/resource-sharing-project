@@ -15,7 +15,7 @@ app.use(express.urlencoded({
 
 //响应数据的中间件
 app.use(function (req, res, next) {
-    res.cc = function (err, status = 444,data='') {
+    res.cc = function (err, status = 444, data = '') {
         res.send({
             meta: {
                 status,
@@ -56,6 +56,9 @@ app.use('/my/buy', buyRouter);
 
 const userinfoRouter = require('./router/userinfo');
 app.use('/my/userinfo', userinfoRouter);
+
+const chatRouter = require('./router/chat');
+app.use('/my/chat', chatRouter);
 
 // app.use(function (err, req, res, next) {//错误级别中间件
 //     if (err instanceof joi.ValidationError) return res.cc(err);
@@ -99,7 +102,142 @@ app.post('/upload', (req, res) => {
     res.end('ok')
 })
 
+// ------------------------
+function gid() {
+    var id = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000
+    var have = false;
+    for (var i = 0; i < player.length; i++) {
+        if (player[i] == id.toString()) {
+            have = true;
+            break;
+        }
+    }
+    if (have) {
+        gid();
+    } else {
+        return id;
+    }
+}
+
+// const SocketServer = require('ws').Server
+// const wss = new SocketServer({ server })  //搭建服务器
+// var player = new Array()
+// //当有人匹配到时
+// wss.on("connection", (ws, req) => {
+//     // 把自己的给搞好先
+//     id = gid();
+//     player.push(id)
+//     wss.clients.forEach(s => {
+//         if (s.socketIdxos == another && s.readyState == 1 && s.socketIdxos != id) {
+//             //another是你要找对面的id号
+//             //做你自己的事，此时s就是你要找的对象,发送信息用s.send()即可
+//         }
+//     })
+// })
+
+
+// const Ws=require('ws');
+// // const userHander=require('./router_hander/user');
+// ;((Ws)=>{
+//     const server=new Ws.Server({port:8008});
+//     const init=()=>{
+//         bindEvent();
+//     }
+//     function bindEvent(){
+//         server.on('open',handleOpen);
+//         server.on('close',handleClose);
+//         server.on('error',handleError);
+//         server.on('connection',handleConnection);
+//     }
+//     function handleOpen(){
+//         console.log("open");
+//     }
+//     function handleClose(){
+//         console.log("close");
+//     }
+//     function handleError(){
+//         console.log("error");
+//     }
+//     function handleConnection(ws){
+//         console.log("connection");
+//         ws.on('message',handleMessage)
+//     }
+//     function handleMessage(msg){
+//         console.log(JSON.parse(msg));
+//         cli
+//         // console.log(server.clients);
+//         // server.clients.forEach((c)=>{
+//         //     // console.log(c);
+//         //     c.chatId=1;
+//         //     console.log(c.chatId);
+//         //     // c.send(msg);
+//         //     // userHander.test(c);
+//         // })
+//     }
+//     init();
+// })(Ws)
+
+// let server = app.listen(8888)
+// let io = require('socket.io').listen(server)
+// let io = require('socket.io')(8888);
+// io.on('connection', (socket) => {
+//     // console.log('someone connected!');
+//     console.log(1);
+// });
+
+// const WebSocket = require('ws'); //模块引入
+// //开一个4000端口来存
+// let clients = [];	//存所有连接上的用户
+// const wss = new WebSocket.Server({
+//     port: 8008
+// });
+const {wss,clients} =require('./wss.js')
+
+//连接上就会多一个client
+wss.on('connection', function connection(client, req) {
+    //有数据就会触发client.on     'message'    data是传上来的数据
+    client.on('message', function incoming(data) {
+        //这是连接上发送过来的数据  唯一标识的phone
+        let dt = JSON.parse(data)
+        // console.log(dt)
+        //每个客户端都存上自己发来的phone做为唯一的id
+        client.id = dt.uid
+        console.log(client.id);
+        //连接上后就压进数组
+        clients.push(client)
+    });
+
+    client.on("close", (msg) => {
+        console.log("与前端断开连接")
+    })
+});
+
+// // 当有人发送消息的时候
+// const router = express.Router();
+// router.post('/sendmsg', (req, res) => {
+//     //前端传过来的数据
+//     let { Pimg, Dimg, FormId, ToId, yuyin, face, content, imgs, nickName } = req.body
+//     const datalist = {
+//         Pimg, Dimg, FormId, ToId, yuyin, face, content, imgs, nickName
+//     }
+//     console.log(content);
+//     //发送给自己客户端的数据
+//     res.send(datalist)
+//     //循环遍历     找到你要发送的人  他的id  就发送
+//     wss.clients.forEach(function each(client) {
+//         if (ToId == client.id) {
+//             client.send(JSON.stringify(datalist));
+//         }
+//     });
+// })
+// app.use(router)
+
+
+
 
 app.listen(3838, () => {
     console.log('api 在3838上运行...');
 })
+
+
+

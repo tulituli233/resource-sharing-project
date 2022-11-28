@@ -42,11 +42,11 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        password: "",
+        name: "user1",
+        password: "123456",
       },
       isLogin: true,
-      tipStr:'去注册',
+      tipStr: "去注册",
       res: {},
       rules: {
         name: [
@@ -64,10 +64,10 @@ export default {
     document.title = "资源共享--登录";
   },
   methods: {
-    regOrLogin(){
-      let l=this.isLogin;
-      this.tipStr=l?'登录':'去注册';
-      this.isLogin=!l;
+    regOrLogin() {
+      let l = this.isLogin;
+      this.tipStr = l ? "登录" : "去注册";
+      this.isLogin = !l;
     },
     reForm() {
       this.$refs.loginForm.resetFields(); //resetFields表单清空
@@ -89,13 +89,18 @@ export default {
             return this.$message.error(res.meta.message);
           this.$message.success(res.meta.message);
           window.sessionStorage.setItem("token", res.data.token);
-          window.sessionStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
+          window.sessionStorage.setItem(
+            "userInfo",
+            JSON.stringify(res.data.userInfo)
+          );
+
           // alert(res.data.token);
+          // this.$router.push("/message");
           this.$router.push("/home");
         } catch (e) {
           console.log(2);
         }
-        console.log(3);
+        console.log(123);
       });
     },
     // 用户注册

@@ -10,6 +10,7 @@
     <div class="ALBox">
       <ArticleList :ArticleList="ArticleList"></ArticleList>
     </div>
+    <!-- <el-button @click="rews"></el-button> -->
   </div>
 </template>
 
@@ -30,13 +31,52 @@ export default {
         hasSelect: false,
       },
       ArticleList: [],
+      ws: "",
     };
   },
   created() {
     document.title = "资源共享--首页";
     this.getArticleList();
   },
+  mounted() {
+    console.log("loo");
+    const ws = new WebSocket("ws://localhost:8008");
+    ws.addEventListener("open", this.handleWsOpen.bind(this), false);
+    ws.addEventListener("close", this.handleWsClose.bind(this), false);
+    ws.addEventListener("error", this.handleWsError.bind(this), false);
+    ws.addEventListener("message", this.handleWsMessage.bind(this), false);
+    this.ws = ws;
+    // this.rews();
+  },
   methods: {
+    rews() {
+      // const ws = new WebSocket("ws://localhost:8008");
+      console.log("re");
+    },
+    handleWsOpen(e) {
+      //   console.log("open", e);
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      console.log("open233");
+      this.ws.send(
+        JSON.stringify({
+          uid: userInfo.id,
+        })
+      );
+    },
+    handleWsClose(e) {
+      console.log("close", e);
+    },
+    handleWsError(e) {
+      console.log("error", e);
+    },
+    handleWsMessage(e) {
+      console.log("message23", e);
+      //   const msg = JSON.parse(e.data);
+      //   if(Array.isArray(msg)){
+      //     this.msgList=msg;
+      //   }
+      // this.msgList.push(msg);
+    },
     async getArticleList() {
       const { data: res } = await this.$http.post(
         "/my/article/alist",

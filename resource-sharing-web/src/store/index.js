@@ -122,7 +122,7 @@ export default new Vuex.Store({
         Article: {},
         Comment: [],
         ArticleInfo: {},
-        inputTopVal:'',
+        inputTopVal: '',
     },
     mutations: {
         add(state) {

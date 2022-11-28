@@ -4,6 +4,10 @@ import router from './router'
 import './plugins/element.js'
 import axios from 'axios'
 import store from './store'
+// import io from 'weapp.socket.io'
+// Vue.prototype.socket=io('http://localhost:8888');
+// const ws = new WebSocket("ws://localhost:8008");
+// Vue.prototype.$ws=ws;
 
 import './assets/css/global.css'
 import './assets/icon/iconfont.css'
@@ -21,6 +25,8 @@ import FootMarkList from './components/FootMark/FootMarkList.js'
 Vue.use(FootMarkList);
 import Recommend from './components/Recommend.js'
 Vue.use(Recommend);
+import ChatRoom from './components/Message/ChatRoom.js'
+Vue.use(ChatRoom);
 
 //导入富文本编辑器样式
 import 'quill/dist/quill.core.css' // import styles

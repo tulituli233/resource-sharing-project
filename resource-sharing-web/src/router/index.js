@@ -17,6 +17,7 @@ import MyHistory from '../components/My/MyHistory.vue'
 import MyInfo from '../components/My/MyInfo.vue'
 import MyOrder from '../components/My/MyOrder.vue'
 import MyShare from '../components/My/MyShare.vue'
+import ChatRoom from '../components/Message/ChatRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -43,6 +44,7 @@ const routes = [
         ]
       },
       { path: '/article', component: ArticleView, name: '文章详情', fullPath: '/home/article', meta: { title: '文章详情' }, },
+      { path: '/chat', component: ChatRoom, name: '私聊', fullPath: '/home/chat', meta: { title: '私聊' }, },
     ]
   }
 ]

@@ -21,7 +21,7 @@
       </div>
       <div class="chatList">
         <p>聊天列表</p>
-        <div class="messageList">
+        <div class="messageList" @click="toChatRoom">
           <div class="headImage">
             <img
               src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
@@ -116,6 +116,10 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    toChatRoom() {
+      this.$router.push("/chat");
+      console.log(12);
     },
   },
 };
