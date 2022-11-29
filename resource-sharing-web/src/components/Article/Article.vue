@@ -2,8 +2,13 @@
   <div class="ArticleBox">
     <h2>{{ Article.Title }}</h2>
     <div class="IssuerBox">
-      <span>作者：{{ Article.IssuerName }}</span
-      ><button class="followBtn" :class="isfollow == 0 ? '':'followed'" @click="addFollow">
+      <span @click="toMainPage(Article.IssuerId, Article.IssuerName)"
+        >作者：{{ Article.IssuerName }}</span
+      ><button
+        class="followBtn"
+        :class="isfollow == 0 ? '' : 'followed'"
+        @click="addFollow"
+      >
         {{ isfollow == 0 ? "+ 关注" : "已关注" }}
       </button>
     </div>
@@ -120,6 +125,14 @@ export default {
       }
       // this.$message.success(res.meta.message);
     },
+    toMainPage(id, name) {
+      // this.$router.replace(`/mainpage?IssuerId=${id}&IssuerName=${name}&t=${Date.now()}`);
+      this.$store.commit("saveMainPageData", {
+        IssuerId: id,
+        IssuerName: name,
+      });
+      this.$router.push(`/mainpage`);
+    },
   },
 };
 </script>
@@ -141,7 +154,7 @@ export default {
       margin-left: 20px;
       border-radius: 5px;
     }
-    .followed{
+    .followed {
       background-color: pink;
       border-color: pink;
       color: #fff;
@@ -152,9 +165,9 @@ export default {
       width: 500px;
     }
   }
-  .LianjieBox{
+  .LianjieBox {
     overflow: hidden;
-    .BuyBtn{
+    .BuyBtn {
       float: right;
     }
   }

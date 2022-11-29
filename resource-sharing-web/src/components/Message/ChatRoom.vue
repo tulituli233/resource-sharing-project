@@ -11,19 +11,39 @@ export default {};
 </style>-->
 
 <template>
-  <div class="home">
-    <ul>
-      <li v-for="item of msgList" :key="item.id">
-        <p>
-          <span>{{ item.user }}</span>
-          <span>{{ new Date(item.dateTime) }}</span>
-        </p>
-        <p>{{ item.msg }}</p>
-      </li>
-    </ul>
-    <input type="text" placeholder="" v-model="messageData.content" />
-    <button @click="sendMessage()">发送</button>
-    <button @click="test">test</button>
+  <div class="chatRoomBox">
+    <div class="chatBox">
+      <div class="friendNmae">{{ ChatListItem.ToName }}</div>
+      <div class="chatListBox">
+        <ul>
+          <li
+            class="liItem"
+            v-for="item of ChatListItem.msgList"
+            :key="item.chatId"
+            :class="item.FromId == ChatListItem.FromId ? 'MyLi' : ''"
+          >
+            <p>
+              <span>{{
+                item.FromId == ChatListItem.FromId
+                  ? ChatListItem.FromName
+                  : ChatListItem.ToName
+              }}</span
+              ><br />
+              <span v-text="toTime(item.CreateTime)"></span>
+            </p>
+            <span class="msgBox">{{ item.ChatContent }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="sendChat">
+        <el-input v-model="messageData.content"> </el-input>
+        <el-button icon="el-icon-s-promotion" @click="sendMessage"
+          >发送</el-button
+        >
+      </div>
+    </div>
+    <!-- <input type="text" placeholder="" v-model="messageData.content" />
+    <button @click="sendMessage">发送</button> -->
   </div>
 </template>
 
@@ -47,15 +67,23 @@ export default {
       messageData: {
         Pimg: "",
         Dimg: "",
-        FormId: 0,
-        ToId: 8,
+        FromId: 0,
+        ToId: 0,
         yuyin: "",
         face: "",
-        content: "qqq",
+        content: "",
         imgs: "",
-        nickName: "",
+        CreateTime: "",
       },
     };
+  },
+  computed: {
+    ChatListItem() {
+      let ChatListItem =
+        this.$store.state.ChatList[this.$store.state.ChatListIndex];
+      console.log(ChatListItem);
+      return ChatListItem;
+    },
   },
   mounted() {
     // this.username = localStorage.getItem("username");
@@ -71,39 +99,50 @@ export default {
     // });
     let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
     this.messageData.FromId = userInfo.id;
-    this.sendMessage();
+    // this.sendMessage();
     // ws.addEventListener("open", this.handleWsOpen.bind(this), false);
     // ws.addEventListener("close", this.handleWsClose.bind(this), false);
     // ws.addEventListener("error", this.handleWsError.bind(this), false);
     // ws.addEventListener("message", this.handleWsMessage.bind(this), false);
   },
   methods: {
-    test() {
-      console.log(321);
-      alert(321);
+    toTime(time) {
+      let t = new Date(time - 0).toLocaleString();
+      return t;
     },
-    handleSendBtnClick() {
-      console.log("111");
-      const msg = this.msg;
-      // if (!msg.trim().length) {
-      //   return;
-      // }
-      ws.send(JSON.stringify());
-      this.msg = "";
+    async getChatList() {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      const { data: res } = await this.$http.get("my/chat/chatList", {
+        params: {
+          UserId: userInfo.id,
+        },
+      });
+      console.log(res);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return this.$message.error(res.meta.message);
+      }
+      this.$message.success(res.meta.message);
+      this.$store.commit("saveChatList", res.data.ChatList);
     },
     async sendMessage() {
-      console.log(21);
+      // console.log(21);
+      this.messageData.CreateTime = Date.now() + "";
+      this.messageData.ToId = this.ChatListItem.ToId;
       const { data: res } = await this.$http.post(
         "my/chat/sendmsg",
         this.messageData
       );
       console.log(res);
-      //   if (res.meta.status > 301) return this.$message.error(res.meta.message);
-      //   if (res.meta.status == 301) {
-      //     return;
-      //     this.$message.error(res.meta.message);
-      //   }
-      //   this.$message.success(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        this.$message.error(res.meta.message);
+        return;
+      }
+      this.$message.success(res.meta.message);
+      this.messageData.content = "";
+      // this.msgList.push(res.data.chat);
+      this.getChatList();
     },
     handleWsOpen(e) {
       //   console.log("open", e);
@@ -131,3 +170,75 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.chatRoomBox {
+  .chatBox {
+    position: relative;
+    width: 800px;
+    .friendNmae {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 729px;
+      padding: 20px;
+      color: #fff;
+      background-color: #12b7f5;
+      text-align: center;
+      font-size: 25px;
+      font-weight: 600;
+    }
+    .chatListBox {
+      // width: 800px;
+      width: 100%;
+      height: 1000px;
+      overflow: auto;
+      background-color: #e5e5e5;
+      padding: 60px 0;
+      ul {
+        width: 749px;
+        padding: 10px;
+        overflow: hidden;
+        .liItem {
+          width: 550px;
+          float: left;
+          list-style: none;
+          .msgBox {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+          }
+        }
+        .MyLi {
+          float: right;
+          p {
+            text-align: right;
+          }
+          // background-color: #12B7F5;
+          .msgBox {
+            background-color: #12b7f5;
+            color: #fff;
+            // text-align: right;
+            float: right;
+          }
+        }
+      }
+    }
+    .sendChat {
+      padding: 10px;
+      position: absolute;
+      bottom: 0;
+      width: 94%;
+      background-color: #F1F1F1;
+      .el-input {
+        width: 80%;
+      }
+      .el-button {
+        width: 17%;
+        color: #fff;
+        background-color: #12b7f5;
+      }
+    }
+  }
+}
+</style>

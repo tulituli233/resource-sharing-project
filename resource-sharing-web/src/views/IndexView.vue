@@ -38,16 +38,16 @@ export default {
     document.title = "资源共享--首页";
     this.getArticleList();
   },
-  mounted() {
-    console.log("loo");
-    const ws = new WebSocket("ws://localhost:8008");
-    ws.addEventListener("open", this.handleWsOpen.bind(this), false);
-    ws.addEventListener("close", this.handleWsClose.bind(this), false);
-    ws.addEventListener("error", this.handleWsError.bind(this), false);
-    ws.addEventListener("message", this.handleWsMessage.bind(this), false);
-    this.ws = ws;
-    // this.rews();
-  },
+  // mounted() {
+  //   console.log("loo");
+  //   const ws = new WebSocket("ws://localhost:8008");
+  //   ws.addEventListener("open", this.handleWsOpen.bind(this), false);
+  //   ws.addEventListener("close", this.handleWsClose.bind(this), false);
+  //   ws.addEventListener("error", this.handleWsError.bind(this), false);
+  //   ws.addEventListener("message", this.handleWsMessage.bind(this), false);
+  //   this.ws = ws;
+  //   // this.rews();
+  // },
   methods: {
     rews() {
       // const ws = new WebSocket("ws://localhost:8008");

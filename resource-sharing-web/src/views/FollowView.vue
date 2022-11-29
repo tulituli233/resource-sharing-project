@@ -3,7 +3,12 @@
     <div class="MyfollowList">
       关注列表
       <div v-if="FollowList.length">
-        <div class="MyfollowItem" v-for="(item, i) in FollowList" :key="i">
+        <div
+          class="MyfollowItem"
+          v-for="(item, i) in FollowList"
+          :key="i"
+          @click="toMainPage(item.WriterId, item.WriterName)"
+        >
           <el-avatar size="large" class="avatar">{{
             item.WriterName
           }}</el-avatar>
@@ -43,6 +48,15 @@ export default {
     };
   },
   methods: {
+    // 前往主页
+    toMainPage(id, name) {
+      // this.$router.replace(`/mainpage?IssuerId=${id}&IssuerName=${name}&t=${Date.now()}`);
+      this.$store.commit("saveMainPageData", {
+        IssuerId: id,
+        IssuerName: name,
+      });
+      this.$router.push(`/mainpage`);
+    },
     async getFollowList(ArticleId) {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.get("/my/userinfo/followlist", {

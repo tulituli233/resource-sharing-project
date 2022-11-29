@@ -186,4 +186,23 @@ Brief varchar(255) 简介
 UserId int 用户ID 
  -->
 
+<!-- 
+ChatId int AI PK 
+FromId int 
+ToId int 
+ChatContent varchar(255) 
+ChatState tinyint 
+Readed tinyint 
+CreateTime varchar(18) 
+ReTime varchar(18)
+ -->
 
+<!-- 
+chatListId int AI PK 
+FromId int 
+FromName varchar(20) 
+ToId int 
+ToName varchar(20) 
+CreateTime varchar(18) 
+ReTime varchar(18)
+ -->

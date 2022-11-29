@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     toTime(time) {
-      let t = new Date(0 - time).toLocaleString();
+      let t = new Date(time - 0).toLocaleString();
       return t;
     },
     async toArticle(ArticleId, IssuerId, IssuerName) {

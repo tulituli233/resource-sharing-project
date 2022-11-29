@@ -29,7 +29,7 @@
         </router-link> -->
       </div>
       <div class="UserBox">
-        <el-avatar size="large" class="avatar">{{username}}</el-avatar>
+        <el-avatar size="large" class="avatar">{{ username }}</el-avatar>
         <el-button type="info" @click="tuichu" class="el-icon-switch-button"
           >退出</el-button
         >
@@ -97,6 +97,27 @@
 import tagsView from "../layout/TagsView.vue";
 export default {
   name: "Home",
+  created() {
+    this.getMenuList();
+    this.newHeight = window.innerHeight - 150;
+    window.onresize = () => {
+      this.newHeight = window.innerHeight - 130;
+      // console.log(this.newHeight);
+    };
+    this.getChatList();
+    // this.Nav=window.sessionStorage.getItem('Nav');//侧边栏选中项
+    // this.Nav=this.$store.state.Nav
+  },
+  mounted() {
+    console.log("loo");
+    const ws = new WebSocket("ws://localhost:8008");
+    ws.addEventListener("open", this.handleWsOpen.bind(this), false);
+    ws.addEventListener("close", this.handleWsClose.bind(this), false);
+    ws.addEventListener("error", this.handleWsError.bind(this), false);
+    ws.addEventListener("message", this.handleWsMessage.bind(this), false);
+    this.ws = ws;
+    // this.rews();
+  },
   data() {
     return {
       circleUrl:
@@ -150,25 +171,76 @@ export default {
     };
   },
   computed: {
-    username(){
+    username() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       return userInfo.username;
-    }
+    },
   },
   components: {
     tagsView,
   },
-  created() {
-    this.getMenuList();
-    this.newHeight = window.innerHeight - 150;
-    window.onresize = () => {
-      this.newHeight = window.innerHeight - 130;
-      // console.log(this.newHeight);
-    };
-    // this.Nav=window.sessionStorage.getItem('Nav');//侧边栏选中项
-    // this.Nav=this.$store.state.Nav
-  },
+
   methods: {
+    handleWsOpen(e) {
+      //   console.log("open", e);
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      console.log("open233");
+      this.ws.send(
+        JSON.stringify({
+          uid: userInfo.id,
+        })
+      );
+    },
+    handleWsClose(e) {
+      console.log("close", e);
+    },
+    handleWsError(e) {
+      console.log("error", e);
+    },
+    handleWsMessage(e) {
+      console.log("message23", e);
+      // tcp实时信息
+      // alert(11)
+      // console.log(11);
+
+      //方案一成功
+      // this.getChatList();
+
+      // console.log(22);
+      // alert(22)
+      // 方案二成功
+      let nowMsg = JSON.parse(e.data);
+      console.log(nowMsg);
+      let oldChatList = this.$store.state.ChatList;
+      oldChatList.forEach((item) => {
+        if (item.ToId == nowMsg.FromId) {
+          item.msgList.push(nowMsg);
+          // console.log("push");
+        }
+        // console.log("item.ToId==nowMsg.FromId", item.ToId == nowMsg.FromId);
+        // console.log("item.ToId", item.ToId);
+        // console.log("nowMsg.FromId", nowMsg.FromId);
+      });
+      // console.log("oldChatList==", oldChatList);
+      this.$store.commit("saveChatList", oldChatList);
+      // console.log("ChatList==", this.$store.state.ChatList);
+    },
+    // 获取私聊数据
+    async getChatList() {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      const { data: res } = await this.$http.get("my/chat/chatList", {
+        params: {
+          UserId: userInfo.id,
+        },
+      });
+      console.log(res);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return this.$message.error(res.meta.message);
+      }
+      this.$message.success(res.meta.message);
+      this.$store.commit("saveChatList", res.data.ChatList);
+    },
     tuichu() {
       window.sessionStorage.clear(); //clear清除缓存区
       this.$router.push("/login"); //路由跳转
@@ -257,7 +329,7 @@ const token = window.sessionStorage.getItem("token");
     width: 1200px;
     height: 600px;
     position: relative;
-    .recommendBox{
+    .recommendBox {
       width: 300px;
       position: absolute;
       top: 0;

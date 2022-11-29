@@ -9,6 +9,8 @@ const expressJoi=require('@escook/express-joi');
 
 router.post('/sendmsg',chatHander.sendmsg);
 
-router.post('/login',chatHander.login);
+router.get('/chatList',chatHander.getChatList);
+
+router.post('/addchatlist',chatHander.addchatlist);
 
 module.exports=router;

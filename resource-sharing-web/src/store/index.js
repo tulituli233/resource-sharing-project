@@ -123,6 +123,12 @@ export default new Vuex.Store({
         Comment: [],
         ArticleInfo: {},
         inputTopVal: '',
+        ChatList: '',
+        ChatListIndex: 0,
+        MainPageData: {
+            IssuerId: 0,
+            IssuerName: ''
+        }
     },
     mutations: {
         add(state) {
@@ -161,6 +167,15 @@ export default new Vuex.Store({
         },
         saveinputTopVal(state, val) {
             state.inputTopVal = val
+        },
+        saveChatList(state, val) {
+            state.ChatList = val
+        },
+        saveChatListIndex(state, val) {
+            state.ChatListIndex = val
+        },
+        saveMainPageData(state, val) {
+            state.MainPageData = val
         },
     },
     actions: {

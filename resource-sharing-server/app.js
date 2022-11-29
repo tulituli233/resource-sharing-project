@@ -191,7 +191,7 @@ function gid() {
 // const wss = new WebSocket.Server({
 //     port: 8008
 // });
-const {wss,clients} =require('./wss.js')
+const { wss, clients } = require('./wss.js')
 
 //连接上就会多一个client
 wss.on('connection', function connection(client, req) {
@@ -204,11 +204,34 @@ wss.on('connection', function connection(client, req) {
         client.id = dt.uid
         console.log(client.id);
         //连接上后就压进数组
-        clients.push(client)
+        let oldIndex = -1;
+        clients.forEach((item, i) => {
+            if (item.id == dt.uid) {
+                oldIndex = i
+            }
+            // item.send(JSON.stringify({datalist:'qwer'}));
+        })
+        if (oldIndex != -1) {
+            // clients.splice(oldIndex, client)
+            clients[oldIndex]=client;
+            console.log('连接替换');
+        } else {
+            clients.push(client)
+            console.log('连接增加');
+        }
+        console.log('clients.l', clients.length);
+        // clients.forEach((item, i) => {
+        //     item.send(JSON.stringify({datalist:'qqqq'}));
+        // })
     });
+
 
     client.on("close", (msg) => {
         console.log("与前端断开连接")
+        console.log('msg=', msg);
+        // clients=clients.forEach(i=>{
+        //     if(i=)
+        // })
     })
 });
 

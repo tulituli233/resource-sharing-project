@@ -21,7 +21,7 @@
       </div>
       <div class="chatList">
         <p>聊天列表</p>
-        <div class="messageList" @click="toChatRoom">
+        <div class="messageList" @click="toChatRoom(i)" v-for="(item, i) in ChatList" :key="i">
           <div class="headImage">
             <img
               src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
@@ -30,57 +30,15 @@
           </div>
           <div class="dialogue">
             <div class="name_time">
-              <div class="name">admin</div>
-              <div class="time">11-20</div>
+              <div class="name">{{item.ToName}}</div>
+              <div class="time" v-text="toTime(item.msgList==undefined?undefined:item.msgList[item.msgList.length-1].CreateTime)"></div>
             </div>
             <div class="info">
-              <div class="content">欢迎你，成为本站用户！</div>
+              <div class="content">{{item.msgList==undefined?'':item.msgList[item.msgList.length-1].ChatContent}}</div>
               <div class="number"><span>1</span></div>
             </div>
           </div>
         </div>
-
-        <!-- <div class="messageList">
-          <div class="headImage">
-            <img
-              src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
-              alt=""
-            />
-          </div>
-          <div class="dialogue">
-            <div class="name_time">
-              <div class="name">名字</div>
-              <div class="time">11-20</div>
-            </div>
-            <div class="info">
-              <div class="content">
-                信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容
-              </div>
-              <div class="number"><span>1</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="messageList">
-          <div class="headImage">
-            <img
-              src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
-              alt=""
-            />
-          </div>
-          <div class="dialogue">
-            <div class="name_time">
-              <div class="name">名字</div>
-              <div class="time">11-20</div>
-            </div>
-            <div class="info">
-              <div class="content">
-                信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容信息内容
-              </div>
-              <div class="number"><span>99</span></div>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
 
@@ -110,16 +68,29 @@ export default {
       currentPage: 1,
     };
   },
+  computed: {
+    ChatList() {
+      return this.$store.state.ChatList;
+    },
+  },
   methods: {
+    toTime(time) {
+      if(time==undefined){
+        return new Date().toLocaleString();
+      }
+      let t = new Date(time - 0).toLocaleString();
+      return t;
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    toChatRoom() {
+    toChatRoom(i) {
+      this.$store.commit('saveChatListIndex',i);
       this.$router.push("/chat");
-      console.log(12);
+      console.log(i);
     },
   },
 };
