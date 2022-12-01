@@ -19,7 +19,14 @@
           ? "该资源为积分资源，你还没有兑换该资源！"
           : Article.LianJie
       }}
-      <el-button class="BuyBtn" size="mini" type="success">兑换</el-button>
+      <el-button
+        class="BuyBtn"
+        size="mini"
+        type="success"
+        v-if="Article.LianJie == null"
+        @click="buyA(Article.Price)"
+        >兑换</el-button
+      >
     </div>
   </div>
 </template>
@@ -132,6 +139,37 @@ export default {
         IssuerName: name,
       });
       this.$router.push(`/mainpage`);
+    },
+    buyA(price = 0) {
+      this.$confirm(`你确定花费${price}积分兑换该分享吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+          const { data: res } = await this.$http.post("/my/buy/add", {
+            SellerId: this.Article.IssuerId,
+            BuyerId: userInfo.id,
+            ArticleId: this.Article.ArticleId,
+            Title: this.Article.Title,
+            CreateTime: Date.now() + "",
+          });
+          console.log(res);
+          if (res.meta.status > 301)
+            return this.$message.error(res.meta.message);
+          if (res.meta.status == 301) {
+            return this.$message.error(res.meta.message);
+          }
+          this.$message.success(res.meta.message);
+          this.getArticle();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消兑换",
+          });
+        });
     },
   },
 };

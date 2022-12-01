@@ -110,7 +110,11 @@ export default {
         Password: this.form.password,
       });
       console.log(res);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.message);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return;
+        this.$message.error(res.meta.message);
+      }
       this.$message.success(res.meta.message);
       window.sessionStorage.setItem("token", res.data);
       this.regOrLogin();

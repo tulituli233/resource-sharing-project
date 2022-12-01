@@ -7,8 +7,8 @@ const {reg_login_schema}=require('../schema/user');
 
 // router.get('/reguser',expressJoi(reg_login_schema),userHander.regUser);
 
-router.post('/reguser',expressJoi(reg_login_schema),userHander.regUser);
+router.post('/reguser',userHander.regUser);
 
-router.post('/login',expressJoi(reg_login_schema),userHander.login);
+router.post('/login',userHander.login);
 
 module.exports=router;

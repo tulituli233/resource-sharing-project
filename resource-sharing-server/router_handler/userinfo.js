@@ -204,3 +204,25 @@ exports.isfollow = (req, res) => {
         res.cc('已关注！', 200)
     })
 }
+
+exports.getMainPage = (req, res) => {
+    const userinfo = req.body;
+    let sqlMP = '';
+    sqlMP = 'select * from user where UserId=?';
+    db.query(sqlMP, userinfo.UserId, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length == 0) return res.cc('查无此人！');
+        res.cc('主页数据获取成功！', 200, {
+            userInfo: {
+                id:results[0].UserId,
+                username: results[0].Username,
+                Likes: results[0].Likes,
+                Followers: results[0].Followers,
+                Sharers: results[0].Sharers,
+                HeadImgUrl: results[0].HeadImgUrl,
+                Brief: results[0].Brief,
+                Integral: results[0].Integral,
+            },
+        })
+    })
+}

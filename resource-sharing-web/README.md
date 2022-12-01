@@ -206,3 +206,36 @@ ToName varchar(20)
 CreateTime varchar(18) 
 ReTime varchar(18)
  -->
+
+ <!-- 
+ Username varchar(20) 
+Password varchar(255) 
+Integral int 
+Email varchar(30) 
+Phone varchar(20) 
+Brief varchar(255) 
+Likes int 
+Followers int 
+Sharers int 
+HeadImgUrl varchar(255)
+  -->
+
+  <!-- SellerId int 
+BuyerId int 
+ArticleId int 
+Title varchar(45) 
+price int 
+CreateTime varchar(18) 
+ReTime varchar(18) -->
+
+<!-- UserId int AI PK 
+Username varchar(20) 
+Password varchar(255) 
+Integral int 
+Email varchar(30) 
+Phone varchar(20) 
+Brief varchar(255) 
+Likes int 
+Followers int 
+Sharers int 
+HeadImgUrl varchar(255) -->

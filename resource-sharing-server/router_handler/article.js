@@ -205,21 +205,36 @@ exports.add = (req, res) => {
 exports.geta = (req, res) => {
     const Article = req.query;
     console.log(Article);
-    let sqlSelectO = 'select * from orders where BuyerId=? and ArticleId=?';
-    db.query(sqlSelectO, [Article.BuyerId, Article.ArticleId], (err, results) => {
+    // 是否收费
+    let sqlFree = 'select * from article where ArticleId=? and Price=0';
+    db.query(sqlFree, Article.ArticleId, (err, results) => {
         if (err) return res.cc(err);
-        let sqlSelectA = '';
-        if (results.length !== 1) {
-            sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where ArticleId=? and ArticleState=1';
-        } else {
+        // 收费
+        if (results.length == 0) {
+            let sqlSelectO = 'select * from orders where BuyerId=? and ArticleId=?';
+            db.query(sqlSelectO, [Article.BuyerId, Article.ArticleId], (err, results) => {
+                if (err) return res.cc(err);
+                let sqlSelectA = '';
+                if (results.length == 0) {
+                    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where ArticleId=? and ArticleState=1';
+                } else {
+                    sqlSelectA = 'select * from article where ArticleId=?';
+                }
+                db.query(sqlSelectA, Article.ArticleId, (err, results) => {
+                    if (err) return res.cc(err);
+                    if (results.length !== 1) return res.cc('没有找到该文章', 301);
+                    res.cc('查找成功！', 200, { Article: results[0] })
+                })
+                // res.cc('查找成功！', 200, { Article: results[0] })
+            })
+        } else { // 免费
             sqlSelectA = 'select * from article where ArticleId=?';
+            db.query(sqlSelectA, Article.ArticleId, (err, results) => {
+                if (err) return res.cc(err);
+                if (results.length !== 1) return res.cc('没有找到该文章2', 301);
+                res.cc('免费查找成功！', 200, { Article: results[0] })
+            })
         }
-        db.query(sqlSelectA, Article.ArticleId, (err, results) => {
-            if (err) return res.cc(err);
-            if (results.length !== 1) return res.cc('没有找到该文章', 301);
-            res.cc('查找成功！', 200, { Article: results[0] })
-        })
-        // res.cc('查找成功！', 200, { Article: results[0] })
     })
 }
 

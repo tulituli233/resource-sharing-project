@@ -4,7 +4,7 @@
       <div class="notice">
         <div class="notice_item">
           <i class="el-icon-chat-dot-square"></i>
-          <p>私聊</p>
+          <p>私信</p>
         </div>
         <div class="notice_item">
           <i class="el-icon-chat-dot-round"></i>

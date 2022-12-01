@@ -14,7 +14,7 @@ export default {};
   <div class="chatRoomBox">
     <div class="chatBox">
       <div class="friendNmae">{{ ChatListItem.ToName }}</div>
-      <div class="chatListBox">
+      <div class="chatListBox" :class="isW96">
         <ul>
           <li
             class="liItem"
@@ -83,6 +83,16 @@ export default {
         this.$store.state.ChatList[this.$store.state.ChatListIndex];
       console.log(ChatListItem);
       return ChatListItem;
+    },
+    isW96() {
+      if (this.ChatListItem.msgList == undefined) {
+        return "ws96";
+      } else {
+        if (this.ChatListItem.msgList.length >= 9) {
+          return "";
+        }
+        return "ws96";
+      }
     },
   },
   mounted() {
@@ -224,12 +234,15 @@ export default {
         }
       }
     }
+    .ws96 {
+      width: 96.5%;
+    }
     .sendChat {
       padding: 10px;
       position: absolute;
       bottom: 0;
       width: 94%;
-      background-color: #F1F1F1;
+      background-color: #f1f1f1;
       .el-input {
         width: 80%;
       }

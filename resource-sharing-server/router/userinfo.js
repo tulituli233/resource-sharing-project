@@ -19,4 +19,6 @@ router.post('/addnote',userinfoHander.addnote);
 
 router.get('/isfollow',userinfoHander.isfollow);
 
+router.post('/getmpd',userinfoHander.getMainPage);
+
 module.exports=router;

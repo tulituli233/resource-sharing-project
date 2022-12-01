@@ -49,8 +49,12 @@ exports.login = (req, res) => {
             expiresIn: '24h',
         });
         res.cc('登录成功！', 200, {
-            userInfo:{id,username:results[0].Username},
-            token:'Bearer ' + tokenStr
+            userInfo: {
+                id,
+                username: results[0].Username,
+            },
+            token: 'Bearer ' + tokenStr
         })
     })
 }
+
