@@ -2,6 +2,7 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const articleUpdate=require('./articleUpdate');
 exports.getlist = (req, res) => {
     const commentInfo = req.query;
     const sqlStr = 'select * from comment where ArticleId=? and CommentType!=2';
@@ -48,7 +49,9 @@ exports.addComment = (req, res) => {
         if (results.affectedRows !== 1) {
             return res.cc('评论失败!', 301);
         }
-        res.cc('评论成功!', 200);
+        // 评论量+1
+        articleUpdate.Article_Comments_ADD(comment.ArticleId)
+        return res.cc('评论成功!', 200);
     })
 }
 
@@ -59,14 +62,14 @@ exports.mycomment = (req, res) => {
     db.query(sqlSelectO, [comment.UserId], (err, results) => {
         if (err) return res.cc(err);
         if (results.length !== 1) return res.cc('没有数据', 301);
-        res.cc('我的评论查找成功！', 200, { MyComment: results,total:results.length })
+        res.cc('我的评论查找成功！', 200, { MyComment: results, total: results.length })
     })
 }
 
 exports.deleteC = (req, res) => {
     const comment = req.query;
     let sqlDel = 'update comment set CommentType=2 where CommentId=? and FromId=?';
-    db.query(sqlDel, [comment.CommentId,comment.UserId], (err, results) => {
+    db.query(sqlDel, [comment.CommentId, comment.UserId], (err, results) => {
         if (err) return res.cc(err);
         if (results.affectedRows !== 1) return res.cc('评论删除失败！', 301);
         res.cc('评论删除成功！', 200)

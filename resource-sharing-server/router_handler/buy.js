@@ -2,6 +2,7 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const articleUpdate=require('./articleUpdate');
 exports.getorderlist = (req, res) => {
     const orderInfo = req.query;
     const sqlStr = 'select * from order where BuyerId=?';
@@ -52,6 +53,7 @@ exports.addorder = (req, res) => {
                                     db.query(sqladd, order, (err, results) => {
                                         if (err) return res.cc(err);
                                         if (results.affectedRows !== 1) return res.cc('兑换失败！', 301);
+                                        // 修改文章数据
                                         return res.cc('兑换成功！', 200);
                                     })
                                 }

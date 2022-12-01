@@ -19,4 +19,6 @@ router.post('/updata',articleHander.updata);
 
 router.get('/getmyshare',articleHander.getMyShare);
 
+router.post('/getfalist',articleHander.getFAList);
+
 module.exports=router;

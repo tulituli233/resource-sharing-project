@@ -14,8 +14,8 @@ exports.alist = (req, res) => {
         // console.log(1);
     }
     if (req.body.cate === '' && req.body.mark !== '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where Title like ? and ArticleState=1';
-        data = ['%' + req.body.mark + '%'];
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
+        data = ['%' + req.body.mark + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%'];
         // console.log(1);
     }
     if (req.body.cate !== '' && req.body.mark === '') {
@@ -23,8 +23,8 @@ exports.alist = (req, res) => {
         data = ['%' + req.body.cate + '%'];
     }
     if (req.body.cate !== '' && req.body.mark !== '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and Title like ? and ArticleState=1';
-        data = ['%' + req.body.cate + '%', '%' + req.body.mark + '%'];
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
+        data = ['%' + req.body.cate + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%'];
     }
 
     db.query(sqlGetArt, data, (err, results) => {
@@ -276,5 +276,19 @@ exports.getMyShare = (req, res) => {
         let arts = results;
         let total = results.length;
         res.cc('查找我的分享成功！', 200, { alist: arts, total })
+    })
+}
+
+exports.getFAList = (req, res) => {
+    const FList = req.body;
+    console.log(FList);
+    selFAList = 'select * from (select * from article where IssuerId in (?)) as allA order by ArticleId desc limit ?;';
+    db.query(selFAList, [FList.FidArray, FList.TopNum], (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length == 0) return res.cc('暂时没有动态！', 301);
+        console.log(results);
+        let arts = results;
+        let total = results.length;
+        res.cc('动态获取成功！', 200, { FAList: arts, total })
     })
 }

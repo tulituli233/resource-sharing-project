@@ -2,6 +2,7 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const articleUpdate=require('./articleUpdate');
 const cateList = [
     {
         value: "A001",
@@ -98,6 +99,10 @@ exports.addnote = (req, res) => {
         if (results.length !== 1) {
             sqladd = 'insert into note set ?';
             data = note;
+            // 增加浏览量
+            console.log('ArticleId2===',note.ArticleId);
+            articleUpdate.Article_Views_ADD(note.ArticleId);
+
         } else {
             sqladd = 'update note set ReTime=? where UserId=? and ArticleId=?';
             data = [note.ReTime, note.UserId, note.ArticleId]

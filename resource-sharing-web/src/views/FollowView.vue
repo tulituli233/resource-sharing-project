@@ -19,8 +19,8 @@
     </div>
     <div class="FollowALBox">
       <div class="ALTitle">关注动态</div>
-      <div v-if="ArticleList.length" class="ALBox">
-        <ArticleList :ArticleList="ArticleList"></ArticleList>
+      <div v-if="FArticleList.length" class="ALBox">
+        <ArticleList :ArticleList="FArticleList"></ArticleList>
       </div>
       <div class="noDataBox" v-else>这里还什么都没有呢~</div>
     </div>
@@ -32,7 +32,6 @@ export default {
   created() {
     document.title = "资源共享--动态";
     this.getFollowList();
-    this.getArticleList();
   },
   data() {
     return {
@@ -44,7 +43,7 @@ export default {
         pagesize: 5,
         hasSelect: true,
       },
-      ArticleList: [],
+      FArticleList: [],
     };
   },
   methods: {
@@ -73,29 +72,38 @@ export default {
       }
       // this.$message.success(res.meta.message);
       this.FollowList = res.data.followlist;
+      if (res.data.followlist.length != undefined) {
+        this.getFAList();
+      } else {
+        this.FArticleList = [];
+      }
     },
-    async getArticleList() {
-      const { data: res } = await this.$http.post(
-        "/my/article/alist",
-        this.queryInfo
-      );
+    async getFAList() {
+      let FidArray = [];
+      let fl = this.FollowList;
+      fl.forEach((item) => {
+        FidArray.push(item.WriterId);
+      });
+      const { data: res } = await this.$http.post("/my/article/getfalist", {
+        FidArray,
+        TopNum: 10,
+      });
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        this.ArticleList = [];
-        return;
-        this.$message.error(res.meta.message);
+        this.FArticleList = [];
+        return this.$message.error(res.meta.message);
       }
-      // this.$message.success(res.meta.message);
-      console.log(res.data.alist);
+      this.$message.success(res.meta.message);
+      console.log(res.data.FAList);
       let alists = [];
-      if (typeof res.data.alist[0].Tags == "string") {
-        alists = res.data.alist.map((item) => {
+      if (typeof res.data.FAList[0].Tags == "string") {
+        alists = res.data.FAList.map((item) => {
           item.Tags = item.Tags.split(",");
           item.Tags.pop();
           return item;
         });
       }
-      this.ArticleList = alists;
+      this.FArticleList = alists;
     },
   },
 };

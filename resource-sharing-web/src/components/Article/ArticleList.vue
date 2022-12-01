@@ -17,8 +17,9 @@
         >
         </el-rate>
         <el-row class="IconRow"
-          ><span class="iconfont icon-dianzan"></span>{{ item.Likes }}<span class="viewsIcon el-icon-view"></span
-          >{{ item.Views }}</el-row
+          ><span class="iconfont icon-dianzan"></span>{{ item.Likes
+          }}<span class="viewsIcon el-icon-view"></span>{{ item.Views
+          }}<span class="viewsIcon el-icon-chat-dot-square"></span>{{ item.Comments }}</el-row
         >
       </div>
       <div class="articleInfo">
@@ -216,7 +217,7 @@ export default {
       }
       .IconRow {
         padding: 5px 0;
-        .iconfont{
+        .iconfont {
           width: 20px;
           height: 20px;
           padding-right: 10px;

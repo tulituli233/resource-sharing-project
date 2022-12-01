@@ -28,6 +28,7 @@
         >兑换</el-button
       >
     </div>
+    <!-- 点赞 收藏 -->
   </div>
 </template>
 
