@@ -10,20 +10,20 @@ exports.alist = (req, res) => {
     // if(req.body.__proto__===undefined)Object.setPrototypeOf(req.body, new Object());
     console.log(req.body);
     if (req.body.cate === '' && req.body.mark === '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where ArticleState=1';
         // console.log(1);
     }
     if (req.body.cate === '' && req.body.mark !== '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
         data = ['%' + req.body.mark + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%'];
         // console.log(1);
     }
     if (req.body.cate !== '' && req.body.mark === '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and ArticleState=1';
         data = ['%' + req.body.cate + '%'];
     }
     if (req.body.cate !== '' && req.body.mark !== '') {
-        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
+        sqlGetArt = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime from article where CateNum like ? and (Title like ? or Tags like ? or Brief like ?) and ArticleState=1';
         data = ['%' + req.body.cate + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%', '%' + req.body.mark + '%'];
     }
 
@@ -150,7 +150,7 @@ function base64ToFile(imgD) {
         if (err) return
         console.log('图片保存成功')
     })
-    return `../../../../uploads/images/${nowTime}.png`
+    return `uploads/images/${nowTime}.png`
 }
 
 function saveImg(imgData) {
@@ -216,7 +216,7 @@ exports.geta = (req, res) => {
                 if (err) return res.cc(err);
                 let sqlSelectA = '';
                 if (results.length == 0) {
-                    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where ArticleId=? and ArticleState=1';
+                    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where ArticleId=? and ArticleState=1';
                 } else {
                     sqlSelectA = 'select * from article where ArticleId=?';
                 }
@@ -269,7 +269,7 @@ exports.updata = (req, res) => {
 exports.getMyShare = (req, res) => {
     const User = req.query;
     console.log(User);
-    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where IssuerId=? and ArticleState=1';
+    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where IssuerId=? and ArticleState=1';
     db.query(sqlSelectA, User.IssuerId, (err, results) => {
         if (err) return res.cc(err);
         if (results.length == 0) return res.cc('你还没有分享资源', 301);

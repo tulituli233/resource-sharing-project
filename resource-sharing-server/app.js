@@ -36,6 +36,7 @@ app.use(cors());
 
 // 托管静态资源文件
 app.use('/uploads', express.static('./uploads'));
+// app.use(express.static('./uploads'));
 
 //unless除了/ours路径，其余路径均需要进行token校验
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/ours/] }))
@@ -213,7 +214,7 @@ wss.on('connection', function connection(client, req) {
         })
         if (oldIndex != -1) {
             // clients.splice(oldIndex, client)
-            clients[oldIndex]=client;
+            clients[oldIndex] = client;
             console.log('连接替换');
         } else {
             clients.push(client)

@@ -2,7 +2,7 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const articleUpdate=require('./articleUpdate');
+const articleUpdate = require('./articleUpdate');
 const cateList = [
     {
         value: "A001",
@@ -100,7 +100,7 @@ exports.addnote = (req, res) => {
             sqladd = 'insert into note set ?';
             data = note;
             // 增加浏览量
-            console.log('ArticleId2===',note.ArticleId);
+            console.log('ArticleId2===', note.ArticleId);
             articleUpdate.Article_Views_ADD(note.ArticleId);
 
         } else {
@@ -114,23 +114,49 @@ exports.addnote = (req, res) => {
                 return res.cc(err);
             }
             if (results.affectedRows !== 1) {
-                return res.cc(iORu==1?'足迹修改失败!':'足迹添加失败!', 301);
+                return res.cc(iORu == 1 ? '足迹修改失败!' : '足迹添加失败!', 301);
             }
-            res.cc(iORu==1?'足迹修改成功!':'足迹添加成功!', 200);
+            res.cc(iORu == 1 ? '足迹修改成功!' : '足迹添加成功!', 200);
         })
     })
 
+}
+
+exports.UpNote = (req, res) => {
+    const note = req.body;
+    const sqlStr = 'update note set ? where UserId=? and ArticleId=?';
+    // console.log(footmark);
+    db.query(sqlStr, [note.reProp, note.UserId, note.ArticleId], (err, results) => {
+        if (err) return res.cc(err);
+        // console.log(results);
+        if (results.affectedRows == 0) return res.cc('记录修改失败！', 301);
+        // 刷新文章数据
+        
+        return res.cc('记录修改成功！', 200)
+    })
 }
 
 exports.footmark = (req, res) => {
     const footmark = req.query;
     const sqlStr = 'select * from note where userId=? and NoteType=?';
     // console.log(footmark);
-    db.query(sqlStr, [footmark.UserId,footmark.NoteType], (err, results) => {
+    db.query(sqlStr, [footmark.UserId, footmark.NoteType], (err, results) => {
         if (err) return res.cc(err);
         // console.log(results);
         if (results.length == 0) return res.cc('没有数据！', 301);
-        res.cc('足迹列表获取成功！', 200, { footmarkList: results, total: results.length })
+        return res.cc('足迹列表获取成功！', 200, { footmarkList: results, total: results.length })
+    })
+}
+
+exports.getNote = (req, res) => {
+    const noteQ = req.query;
+    const sqlStr = 'select * from note where userId=? and ArticleId=?';
+    // console.log('noteQ==',noteQ);
+    db.query(sqlStr, [noteQ.UserId, noteQ.ArticleId], (err, results) => {
+        if (err) return res.cc(err);
+        // console.log('sqlnote==',results);
+        if (results.length == 0) return res.cc('没有对应Note数据！', 301);
+        return res.cc('获取Note成功！', 200, { Note: results[0] })
     })
 }
 
@@ -158,7 +184,7 @@ exports.addFollow = (req, res) => {
             if (results.affectedRows !== 1) {
                 return res.cc(follow.FollowState == 0 ? '取关失败!' : '关注失败!', 301);
             }
-            res.cc(follow.FollowState == 0 ? '取关成功!' : '关注成功!', 200);
+            return res.cc(follow.FollowState == 0 ? '取关成功!' : '关注成功!', 200);
         })
     })
 }
@@ -170,7 +196,7 @@ exports.followlist = (req, res) => {
     db.query(sqlSelectF, [follow.FollowerId], (err, results) => {
         if (err) return res.cc(err);
         if (results.length == 0) return res.cc('没有数据！', 301);
-        res.cc('关注列表获取成功！', 200, { followlist: results, total: results.length })
+        return res.cc('关注列表获取成功！', 200, { followlist: results, total: results.length })
     })
 }
 
@@ -180,7 +206,7 @@ exports.unfollow = (req, res) => {
     db.query(sqlDel, [follow.FollowerId, follow.WriterId], (err, results) => {
         if (err) return res.cc(err);
         if (results.affectedRows !== 1) return res.cc('取消关注失败！', 301);
-        res.cc('取消关注成功！', 200)
+        return res.cc('取消关注成功！', 200)
     })
 }
 
@@ -195,7 +221,7 @@ exports.updata = (req, res) => {
         if (results.affectedRows !== 1) {
             return res.cc('资料修改失败!', 301);
         }
-        res.cc('资料修改成功!', 200);
+        return res.cc('资料修改成功!', 200);
     })
 }
 
@@ -206,7 +232,7 @@ exports.isfollow = (req, res) => {
     db.query(sqlSelectF, [follow.FollowerId, follow.WriterId], (err, results) => {
         if (err) return res.cc(err);
         if (results.length == 0) return res.cc('没有关注！', 301);
-        res.cc('已关注！', 200)
+        return res.cc('已关注！', 200)
     })
 }
 
@@ -219,7 +245,7 @@ exports.getMainPage = (req, res) => {
         if (results.length == 0) return res.cc('查无此人！');
         res.cc('主页数据获取成功！', 200, {
             userInfo: {
-                id:results[0].UserId,
+                id: results[0].UserId,
                 username: results[0].Username,
                 Likes: results[0].Likes,
                 Followers: results[0].Followers,

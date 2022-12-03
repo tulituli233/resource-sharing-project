@@ -2,15 +2,10 @@
   <div class="ArticleBox">
     <h2>{{ Article.Title }}</h2>
     <div class="IssuerBox">
-      <span @click="toMainPage(Article.IssuerId, Article.IssuerName)"
-        >作者：{{ Article.IssuerName }}</span
-      ><button
-        class="followBtn"
-        :class="isfollow == 0 ? '' : 'followed'"
-        @click="addFollow"
-      >
-        {{ isfollow == 0 ? "+ 关注" : "已关注" }}
-      </button>
+      <span @click="toMainPage(Article.IssuerId, Article.IssuerName)">
+        {{ Article.IssuerName }}&nbsp;&nbsp;创建于
+      </span>
+      <span class="spanTime" v-text="toTime(Article.CreateTime)"></span>
     </div>
     <div class="ContentBox" v-html="Article.Content">{{ Article.Content }}</div>
     <div class="LianjieBox">
@@ -28,7 +23,42 @@
         >兑换</el-button
       >
     </div>
-    <!-- 点赞 收藏 -->
+    <!-- 点赞 收藏 评论-->
+    <div class="bottomBox">
+      <div class="w">
+        <span @click="toMainPage(Article.IssuerId, Article.IssuerName)"
+          >作者：{{ Article.IssuerName }}</span
+        ><button
+          class="followBtn"
+          :class="isfollow == 0 ? '' : 'followed'"
+          @click="addFollow"
+        >
+          {{ isfollow == 0 ? "+ 关注" : "已关注" }}
+        </button>
+      </div>
+      <div class="IconRow">
+        <span
+          class="iconfont icon-dianzan"
+          @click="toStarOrLike(1, this.Liked)"
+          :class="Liked ? 'pink' : ''"
+        ></span
+        >{{ Article.Likes
+        }}<span
+          class="iconfont icon-shoucang"
+          @click="toStarOrLike(2, this.Star)"
+          :class="Star ? 'gold' : ''"
+        ></span
+        >{{ Article.Stars
+        }}<span class="viewsIcon el-icon-chat-dot-square"></span
+        >{{ Article.Comments }}
+      </div>
+    </div>
+
+    <div class="dscBox">
+      <!-- <div class="like">点赞</div>
+      <div class="star">收藏</div>
+      <div class="comment">评论</div> -->
+    </div>
   </div>
 </template>
 
@@ -38,12 +68,15 @@ export default {
     return {
       Article: {},
       isfollow: 0,
+      Liked: false,
+      Star: false,
     };
   },
   created() {
     // document.title = "资源共享--文章详情";
     this.getArticle();
     this.isFollow();
+    this.getNote();
   },
   computed: {
     // Article() {
@@ -51,6 +84,10 @@ export default {
     // },
   },
   methods: {
+    toTime(time) {
+      let t = new Date(time - 0).toLocaleString();
+      return t;
+    },
     async getArticle() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.get("/my/article/geta", {
@@ -172,6 +209,53 @@ export default {
           });
         });
     },
+    async toStarOrLike(type, isPush) {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      let reProp = {};
+      // let Liked = this.Liked;
+      // let Star = this.Star;
+      type == 1 ? (reProp.Liked = !isPush) : (reProp.Star = !isPush);
+      const { data: res } = await this.$http.post("/my/userinfo/UpNote", {
+        UserId: userInfo.id,
+        ArticleId: this.Article.ArticleId,
+        reProp,
+        type,
+        isPush,
+      });
+      console.log("toStarOrLike==", res);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return this.$message.error(res.meta.message);
+      }
+      this.$message.success(res.meta.message);
+      type == 1 ? (this.Liked = !isPush) : (this.Star = !isPush);
+      type == 1
+        ? !isPush == true
+          ? this.Article.Likes++
+          : this.Article.Likes--
+        : !isPush == true
+        ? this.Article.Stars++
+        : this.Article.Stars--;
+    },
+    async getNote() {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      let params = {
+        UserId: userInfo.id,
+        ArticleId: this.$store.state.ArticleInfo.ArticleId,
+      };
+      console.log(params);
+      const { data: res } = await this.$http.get("/my/userinfo/getNote", {
+        params,
+      });
+      console.log("getNote==", res);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return this.$message.error(res.meta.message);
+      }
+      // this.$message.success(res.meta.message);
+      this.Liked = res.data.Note.Liked == 0 ? false : true;
+      this.Star = res.data.Note.Star == 0 ? false : true;
+    },
   },
 };
 </script>
@@ -189,15 +273,6 @@ export default {
   .IssuerBox {
     background-color: #ebebeb;
     padding: 10px;
-    .followBtn {
-      margin-left: 20px;
-      border-radius: 5px;
-    }
-    .followed {
-      background-color: pink;
-      border-color: pink;
-      color: #fff;
-    }
   }
   .ContentBox {
     img {
@@ -208,6 +283,44 @@ export default {
     overflow: hidden;
     .BuyBtn {
       float: right;
+    }
+  }
+  .bottomBox {
+    overflow: hidden;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ebebeb;
+    font-size: 20px;
+    .w {
+      float: left;
+      .followBtn {
+        margin-left: 20px;
+        border-radius: 5px;
+      }
+      .followed {
+        background-color: pink;
+        border-color: pink;
+        color: #fff;
+      }
+    }
+    .IconRow {
+      float: right;
+      padding: 5px 0;
+      .iconfont {
+        width: 20px;
+        height: 20px;
+        padding: 0 10px 0 15px;
+        font-size: 20px;
+      }
+      .viewsIcon {
+        padding: 0 10px 0 15px;
+      }
+      .pink {
+        color: pink;
+      }
+      .gold {
+        color: gold;
+      }
     }
   }
 }

@@ -239,3 +239,7 @@ Likes int
 Followers int 
 Sharers int 
 HeadImgUrl varchar(255) -->
+
+<!-- 
+Liked tinyint 
+Star -->

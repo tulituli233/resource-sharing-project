@@ -21,4 +21,8 @@ router.get('/isfollow',userinfoHander.isfollow);
 
 router.post('/getmpd',userinfoHander.getMainPage);
 
+router.post('/UpNote',userinfoHander.UpNote);
+
+router.get('/getNote',userinfoHander.getNote);
+
 module.exports=router;

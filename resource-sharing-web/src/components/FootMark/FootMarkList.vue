@@ -35,7 +35,7 @@ export default {
       let t = new Date(time - 0).toLocaleString();
       return t;
     },
-    async toArticle(ArticleId, IssuerId, IssuerName) {
+    toArticle(ArticleId, IssuerId, IssuerName) {
       // this.getArticle(ArticleId);
       let ArticleInfo = {
         ArticleId,
