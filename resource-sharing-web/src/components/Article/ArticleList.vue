@@ -9,18 +9,13 @@
       <div class="ImgBox">
         <img :src="item.FirstImgUrl" alt="" />
         <el-rate
-          v-model="item.Grade"
+          :value="item.Grade / 20"
           disabled
           show-score
           text-color="#ff9900"
           :score-template="item.Grade + ''"
         >
         </el-rate>
-        <el-row class="IconRow"
-          ><span class="iconfont icon-dianzan"></span>{{ item.Likes
-          }}<span class="viewsIcon el-icon-view"></span>{{ item.Views
-          }}<span class="viewsIcon el-icon-chat-dot-square"></span>{{ item.Comments }}</el-row
-        >
       </div>
       <div class="articleInfo">
         <div class="IssuerBox">
@@ -44,6 +39,15 @@
       <div class="priceBox" :class="item.Price == 0 ? 'cGreen' : 'cYellow'">
         {{ item.Price == 0 ? "免费" : `$${item.Price}` }}
       </div>
+      <el-row class="IconRow"
+        ><span class="iconfont icon-dianzan"></span>{{ item.Likes
+        }}<span class="viewsIcon el-icon-view"></span>{{ item.Views
+        }}<span class="viewsIcon el-icon-chat-dot-square"></span
+        >{{ item.Comments }}
+        <span v-if="item.Price != 0">
+          <span class="iconfont viewsIcon icon-zhifu"></span>{{ item.BuyNum }}
+        </span>
+      </el-row>
       <span class="spanTime" v-text="toTime(item.CreateTime)"></span>
     </div>
 
@@ -208,24 +212,13 @@ export default {
     overflow: hidden;
     // border-bottom: 1px solid #fff;
     background-color: #fff;
+    padding-bottom: 30px !important;
     padding: 10px;
     .ImgBox {
       float: left;
       img {
         width: 140px;
         height: 100px;
-      }
-      .IconRow {
-        padding: 5px 0;
-        .iconfont {
-          width: 20px;
-          height: 20px;
-          padding-right: 10px;
-        }
-        .viewsIcon {
-          margin-left: 20px;
-          padding-right: 10px;
-        }
       }
     }
     .articleInfo {
@@ -272,6 +265,26 @@ export default {
     }
     .cYellow {
       background-color: #fca60b;
+    }
+    .IconRow {
+      padding: 5px 0 5px 15px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      .iconfont {
+        width: 20px;
+        height: 20px;
+        padding-right: 10px;
+      }
+      .pl20 {
+        padding-left: 20px;
+      }
+      .viewsIcon {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        padding-right: 10px;
+      }
     }
     .spanTime {
       position: absolute;

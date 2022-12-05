@@ -2,6 +2,7 @@ const express = require('express');
 const joi = require('joi');
 const config = require('./config');
 const expressJWT = require('express-jwt');
+const path = require('path');
 
 const app = express();
 // 设置请求大小
@@ -35,8 +36,9 @@ app.use(cors());
 // app.use(bodyParser.json());
 
 // 托管静态资源文件
-app.use('/uploads', express.static('./uploads'));
+// app.use('/uploads', express.static('./uploads'));
 // app.use(express.static('./uploads'));
+app.use('/uploads',express.static(path.join(__dirname,'/uploads')));
 
 //unless除了/ours路径，其余路径均需要进行token校验
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/ours/] }))
@@ -192,7 +194,7 @@ function gid() {
 // const wss = new WebSocket.Server({
 //     port: 8008
 // });
-const { wss, clients } = require('./wss.js')
+const { wss, clients } = require('./wss.js');
 
 //连接上就会多一个client
 wss.on('connection', function connection(client, req) {

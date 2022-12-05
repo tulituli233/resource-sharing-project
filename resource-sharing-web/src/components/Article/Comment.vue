@@ -1,5 +1,8 @@
 <template>
   <div class="commentBox">
+    <div class="CommentNum">
+      <span class="viewsIcon el-icon-chat-dot-square"></span>评论 {{ CommentNum }}
+    </div>
     <div class="pingLunBox">
       <el-input
         type="textarea"
@@ -28,7 +31,7 @@
         <span>{{ item.FromName }}</span>
         <div class="UpBox">
           <span class="iconfont icon-dianzan"></span
-          ><span>{{ item.Likes==0?'':item.Likes }}</span>
+          ><span>{{ item.Likes == 0 ? "" : item.Likes }}</span>
         </div>
         <div class="huifuBtn">
           <button @click="toHuifu(item.FromId, item.FromName, item.CommentId)">
@@ -52,7 +55,7 @@
             <span>&nbsp;&nbsp;回复：{{ item1.ToName }}</span>
             <div class="UpBox">
               <span class="iconfont icon-dianzan"></span
-              ><span>{{ item1.Likes==0?'':item1.Likes }}</span>
+              ><span>{{ item1.Likes == 0 ? "" : item1.Likes }}</span>
             </div>
             <div class="huifuBtn">
               <button
@@ -82,6 +85,7 @@ export default {
   data() {
     return {
       Comment: {},
+      CommentNum: 0,
       CommentInfo: {
         CommentContent: "",
         ToId: "",
@@ -171,6 +175,7 @@ export default {
       }
       // this.$message.success(res.meta.message);
       this.Comment = res.data.clist;
+      this.CommentNum = res.data.total;
       this.toComment();
       // this.$store.commit("saveComment", res.data.clist);
     },
@@ -183,6 +188,15 @@ export default {
   width: 750px;
   padding: 10px;
   box-shadow: 10px 10px 5px #ccc;
+  background-color: #fff;
+  .CommentNum{
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    .viewsIcon{
+      padding-right: 7px;
+    }
+  }
   .commentItem {
     // width: 100%;
     padding: 10px;
@@ -229,7 +243,7 @@ export default {
     .huifuBox {
       width: 92%;
       padding: 10px;
-      background: #ddd;
+      background: #ebebeb;
       margin-left: 20px;
       .huifuItem {
         border-bottom: 1px #fff solid;

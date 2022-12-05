@@ -43,7 +43,7 @@
     </div>
 
     <!-- 分页器 -->
-    <div class="block">
+    <!-- <div class="block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -54,7 +54,7 @@
         :total="1"
       >
       </el-pagination>
-    </div>
+    </div> -->
   </div>
 </template>
 

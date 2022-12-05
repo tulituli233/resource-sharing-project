@@ -2,10 +2,10 @@ const db = require('../db/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const articleUpdate=require('./articleUpdate');
+const articleUpdate = require('./articleUpdate');
 exports.getorderlist = (req, res) => {
     const orderInfo = req.query;
-    const sqlStr = 'select * from order where BuyerId=?';
+    const sqlStr = 'select * from orders where BuyerId=?';
     db.query(sqlStr, orderInfo.BuyerId, (err, results) => {
         if (err) {
             return res.cc(err);
@@ -53,7 +53,8 @@ exports.addorder = (req, res) => {
                                     db.query(sqladd, order, (err, results) => {
                                         if (err) return res.cc(err);
                                         if (results.affectedRows !== 1) return res.cc('兑换失败！', 301);
-                                        // 修改文章数据
+                                        // 修改文章购买数据
+                                        articleUpdate.Article_BuyNum_ADD(order.ArticleId)
                                         return res.cc('兑换成功！', 200);
                                     })
                                 }

@@ -22,7 +22,9 @@ export default {
   .ArticleLeftBox {
     float: left;
     width: 800px;
+    padding-bottom: 20px;
   }
-  .ArticleRightBox{}
+  .ArticleRightBox {
+  }
 }
 </style>

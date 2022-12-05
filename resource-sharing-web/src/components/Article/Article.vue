@@ -23,6 +23,33 @@
         >兑换</el-button
       >
     </div>
+    <!-- 评分 -->
+    <div class="rateBox">
+      <div class="Arate">
+        评分：
+        <el-rate
+          :value="Article.Grade / 20"
+          disabled
+          show-score
+          text-color="#ff9900"
+          :score-template="Article.Grade + ''"
+        >
+        </el-rate>
+      </div>
+      <div class="Myrate" v-if="Article.LianJie == null">需要兑换后，才能评分哦~！</div>
+      <div class="Myrate" v-else>
+        我的评分：
+        <el-rate
+          v-model="MyGrade"
+          show-score
+          text-color="#ff9900"
+          :score-template="Grade + ''"
+          allow-half
+          @change="GradeChange"
+        >
+        </el-rate>
+      </div>
+    </div>
     <!-- 点赞 收藏 评论-->
     <div class="bottomBox">
       <div class="w">
@@ -39,18 +66,21 @@
       <div class="IconRow">
         <span
           class="iconfont icon-dianzan"
-          @click="toStarOrLike(1, this.Liked)"
+          @click="toStarOrLike(1, Liked)"
           :class="Liked ? 'pink' : ''"
         ></span
         >{{ Article.Likes
         }}<span
           class="iconfont icon-shoucang"
-          @click="toStarOrLike(2, this.Star)"
+          @click="toStarOrLike(2, Star)"
           :class="Star ? 'gold' : ''"
         ></span
-        >{{ Article.Stars
-        }}<span class="viewsIcon el-icon-chat-dot-square"></span
-        >{{ Article.Comments }}
+        >{{ Article.Stars }}
+        <!-- <span class="viewsIcon el-icon-chat-dot-square"> </span>
+        {{ Article.Comments }} -->
+        <span v-if="Article.Price != 0">
+          <span class="iconfont pl20 icon-zhifu"></span>{{ Article.BuyNum }}
+        </span>
       </div>
     </div>
 
@@ -70,18 +100,29 @@ export default {
       isfollow: 0,
       Liked: false,
       Star: false,
+      Grade: 60,
+      Note: "",
     };
   },
   created() {
     // document.title = "资源共享--文章详情";
     this.getArticle();
     this.isFollow();
-    this.getNote();
   },
   computed: {
     // Article() {
     //   return this.$store.state.Article;
     // },
+    MyGrade: {
+      get() {
+        let g = this.Grade / 20;
+        return g;
+      },
+      set(g) {
+        this.Grade = g * 20;
+        // this.Grade = g;
+      },
+    },
   },
   methods: {
     toTime(time) {
@@ -100,8 +141,7 @@ export default {
       // alert(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        return;
-        this.$message.error(res.meta.message);
+        return this.$message.error(res.meta.message);
       }
       // this.$message.success(res.meta.message);
       this.Article = res.data.Article;
@@ -143,8 +183,7 @@ export default {
       console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        return;
-        this.$message.error(res.meta.message);
+        return this.$message.error(res.meta.message);
       }
       // this.$message.success(res.meta.message);
       this.isFollow();
@@ -152,23 +191,31 @@ export default {
     async addNote() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.post("/my/userinfo/addnote", {
-        UserId: userInfo.id,
-        WriterId: this.Article.IssuerId,
-        WriterName: this.Article.IssuerName,
-        ArticleId: this.Article.ArticleId,
-        Title: this.Article.Title,
-        CateNum: this.Article.CateNum,
-        CateName: this.Article.CateName,
-        NoteType: 0,
-        CreateTime: Date.now() + "",
+        note: {
+          UserId: userInfo.id,
+          WriterId: this.Article.IssuerId,
+          WriterName: this.Article.IssuerName,
+          ArticleId: this.Article.ArticleId,
+          Title: this.Article.Title,
+          CateNum: this.Article.CateNum,
+          CateName: this.Article.CateName,
+          NoteType: 0,
+          CreateTime: Date.now() + "",
+        },
+        Grade: {
+          NowGrade: this.Article.Grade,
+          VOrBNum: this.Article.Views,
+          oldGrade: this.Article.Grade,
+          Price: this.Article.Price,
+        },
       });
       console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        return;
-        this.$message.error(res.meta.message);
+        return this.$message.error(res.meta.message);
       }
       // this.$message.success(res.meta.message);
+      this.getNote();
     },
     toMainPage(id, name) {
       // this.$router.replace(`/mainpage?IssuerId=${id}&IssuerName=${name}&t=${Date.now()}`);
@@ -188,6 +235,7 @@ export default {
           let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
           const { data: res } = await this.$http.post("/my/buy/add", {
             SellerId: this.Article.IssuerId,
+            SellerName: this.Article.IssuerName,
             BuyerId: userInfo.id,
             ArticleId: this.Article.ArticleId,
             Title: this.Article.Title,
@@ -217,6 +265,7 @@ export default {
       type == 1 ? (reProp.Liked = !isPush) : (reProp.Star = !isPush);
       const { data: res } = await this.$http.post("/my/userinfo/UpNote", {
         UserId: userInfo.id,
+        IssuerId: this.Article.IssuerId,
         ArticleId: this.Article.ArticleId,
         reProp,
         type,
@@ -255,6 +304,28 @@ export default {
       // this.$message.success(res.meta.message);
       this.Liked = res.data.Note.Liked == 0 ? false : true;
       this.Star = res.data.Note.Star == 0 ? false : true;
+      this.Note = res.data.Note;
+      this.Grade = res.data.Note.Grade;
+    },
+    async GradeChange() {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      let VOrBNum =
+        this.Article.Price == 0 ? this.Article.Views : this.Article.BuyNum;
+      const { data: res } = await this.$http.post("/my/userinfo/UpNoteGrade", {
+        UserId: userInfo.id,
+        ArticleId: this.Article.ArticleId,
+        MyNewGrade: this.Grade,
+        MyOldGrade: this.Note.Grade,
+        VOrBNum,
+        oldGrade: this.Article.Grade,
+      });
+      console.log("GradeChange==", res);
+      if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      if (res.meta.status == 301) {
+        return this.$message.error(res.meta.message);
+      }
+      this.$message.success(res.meta.message);
+      this.getArticle();
     },
   },
 };
@@ -283,6 +354,17 @@ export default {
     overflow: hidden;
     .BuyBtn {
       float: right;
+    }
+  }
+  .rateBox {
+    padding: 10px;
+    overflow: hidden;
+    .Arate {
+      float: left;
+      margin-right: 40px;
+    }
+    .Myrate {
+      float: left;
     }
   }
   .bottomBox {
@@ -325,3 +407,4 @@ export default {
   }
 }
 </style>
+

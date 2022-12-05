@@ -37,7 +37,7 @@
         </el-button>
       </div>
       <div v-else class="NoMy">
-        <el-button>编辑资料</el-button>
+        <el-button type="success" @click="toMyInfo">编辑资料</el-button>
       </div>
     </div>
     <div class="sharBox">
@@ -77,6 +77,9 @@ export default {
     };
   },
   methods: {
+    toMyInfo() {
+      this.$router.push("/myInfo");
+    },
     async toChatRoom() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       let chatList = {
@@ -113,9 +116,14 @@ export default {
       if (res.meta.status == 301) {
         return this.$message.error(res.meta.message);
       }
-    //   this.$message.success(res.meta.message);
+      //   this.$message.success(res.meta.message);
       this.$store.commit("saveChatList", res.data.ChatList);
-      this.$store.commit("saveChatListIndex", res.data.ChatList.length - 1);
+      //
+      res.data.ChatList.forEach((item, i) => {
+        if (this.MainPageData.IssuerId == item.ToId) {
+          this.$store.commit("saveChatListIndex", i);
+        }
+      });
       this.$router.push("/chat");
     },
     async isFollow() {
@@ -166,7 +174,7 @@ export default {
       if (res.meta.status == 301) {
         return this.$message.error(res.meta.message);
       }
-    //   this.$message.success(res.meta.message);
+      //   this.$message.success(res.meta.message);
       this.MPD = res.data.userInfo;
     },
     async getMyShare() {
@@ -226,6 +234,8 @@ export default {
     }
     .NoMy {
       float: left;
+      padding-top: 20px;
+      padding-left: 10px;
     }
   }
   .sharBox {

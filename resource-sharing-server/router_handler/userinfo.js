@@ -82,7 +82,8 @@ const cateList = [
     },
 ]
 exports.addnote = (req, res) => {
-    const note = req.body;
+    const note = req.body.note;
+    const Grade = req.body.Grade;
     note.ReTime = note.CreateTime;
     cateList.forEach(item => {
         if (item.value == note.CateNum) {
@@ -100,9 +101,12 @@ exports.addnote = (req, res) => {
             sqladd = 'insert into note set ?';
             data = note;
             // 增加浏览量
-            console.log('ArticleId2===', note.ArticleId);
+            // console.log('ArticleId2===', note.ArticleId);
             articleUpdate.Article_Views_ADD(note.ArticleId);
-
+            // 修改评分
+            if (Grade.Price != 0) {
+                articleUpdate.Article_Grade_ADD(note.ArticleId, 60 - Grade.oldGrade, Grade.VOrBNum + 1, Grade.oldGrade);
+            }
         } else {
             sqladd = 'update note set ReTime=? where UserId=? and ArticleId=?';
             data = [note.ReTime, note.UserId, note.ArticleId]
@@ -131,16 +135,36 @@ exports.UpNote = (req, res) => {
         // console.log(results);
         if (results.affectedRows == 0) return res.cc('记录修改失败！', 301);
         // 刷新文章数据
-        
+        articleUpdate.Article_LikedOrStar(note.IssuerId, note.ArticleId, note.type, note.isPush)
         return res.cc('记录修改成功！', 200)
+    })
+}
+
+exports.UpNoteGrade = (req, res) => {
+    const Grade = req.body;
+    const sqlStr = 'update note set Grade=? where UserId=? and ArticleId=?';
+    // console.log(footmark);
+    db.query(sqlStr, [Grade.MyNewGrade, Grade.UserId, Grade.ArticleId], (err, results) => {
+        if (err) return res.cc(err);
+        // console.log(results);
+        if (results.affectedRows == 0) return res.cc('评分修改失败！', 301);
+        // 刷新文章数据
+        console.log('Grade', Grade);
+        articleUpdate.Article_Grade_ADD(Grade.ArticleId, Grade.MyNewGrade - Grade.MyOldGrade, Grade.VOrBNum, Grade.oldGrade);
+        return res.cc('评分修改成功！', 200)
     })
 }
 
 exports.footmark = (req, res) => {
     const footmark = req.query;
-    const sqlStr = 'select * from note where userId=? and NoteType=?';
+    let sqlStr = 'select * from note where userId=? and NoteType!=1';
+    let data = [footmark.UserId]
+    if (footmark.NoteType != 0) {
+        sqlStr = 'select * from note where userId=? and Star=1 and NoteType!=1';
+        // console.log('footmark==',1);
+    }
     // console.log(footmark);
-    db.query(sqlStr, [footmark.UserId, footmark.NoteType], (err, results) => {
+    db.query(sqlStr, data, (err, results) => {
         if (err) return res.cc(err);
         // console.log(results);
         if (results.length == 0) return res.cc('没有数据！', 301);
@@ -159,7 +183,7 @@ exports.getNote = (req, res) => {
         return res.cc('获取Note成功！', 200, { Note: results[0] })
     })
 }
-
+// 关注
 exports.addFollow = (req, res) => {
     const follow = req.body;
     follow.ReTime = follow.CreateTime;
@@ -176,11 +200,15 @@ exports.addFollow = (req, res) => {
             sqladd = 'update follow set FollowState=?,ReTime=? where FollowerId=? and WriterId=?';
             Data = [follow.FollowState, follow.ReTime, follow.FollowerId, follow.WriterId]
         }
-        console.log(sqladd);
+        // console.log(sqladd);
         db.query(sqladd, Data, (err, results) => {
             if (err) {
                 return res.cc(err);
             }
+            // 粉丝数量
+            articleUpdate.User_Followers(follow.WriterId, follow.FollowState == 0 ? true : false);
+            // 关注数量
+            articleUpdate.User_Sharers(follow.FollowerId, follow.FollowState == 0 ? true : false);
             if (results.affectedRows !== 1) {
                 return res.cc(follow.FollowState == 0 ? '取关失败!' : '关注失败!', 301);
             }

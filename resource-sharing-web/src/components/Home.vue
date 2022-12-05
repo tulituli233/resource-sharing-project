@@ -29,7 +29,9 @@
         </router-link> -->
       </div>
       <div class="UserBox">
-        <el-avatar size="large" class="avatar">{{ username }}</el-avatar>
+        <div class="avdiv" @click="toMainPage">
+          <el-avatar size="large" class="avatar">{{ username }}</el-avatar>
+        </div>
         <el-button type="info" @click="tuichu" class="el-icon-switch-button"
           >退出</el-button
         >
@@ -181,6 +183,14 @@ export default {
   },
 
   methods: {
+    toMainPage() {
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      this.$store.commit("saveMainPageData", {
+        IssuerId: userInfo.id,
+        IssuerName: userInfo.username,
+      });
+      this.$router.push(`/mainpage`);
+    },
     handleWsOpen(e) {
       //   console.log("open", e);
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
@@ -236,6 +246,7 @@ export default {
       console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
+        this.$store.commit("saveChatList", []);
         return this.$message.error(res.meta.message);
       }
       this.$message.success(res.meta.message);

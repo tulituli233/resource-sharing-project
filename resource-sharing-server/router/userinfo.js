@@ -25,4 +25,6 @@ router.post('/UpNote',userinfoHander.UpNote);
 
 router.get('/getNote',userinfoHander.getNote);
 
+router.post('/UpNoteGrade',userinfoHander.UpNoteGrade);
+
 module.exports=router;

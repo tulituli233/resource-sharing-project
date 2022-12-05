@@ -18,6 +18,7 @@ export default {
   },
   methods: {
     async getNoteList() {
+      console.log(12);
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.get("/my/userinfo/footmark", {
         params: {
