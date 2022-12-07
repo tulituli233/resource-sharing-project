@@ -29,6 +29,7 @@
 
 <script>
 export default {
+  name: "FollowView",
   created() {
     document.title = "资源共享--动态";
     this.getFollowList();

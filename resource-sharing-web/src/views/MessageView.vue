@@ -4,62 +4,45 @@
       <div class="notice">
         <div class="notice_item">
           <i class="el-icon-chat-dot-square"></i>
-          <p>私信</p>
+          <router-link class="My-router-link" :to="{ path: '/myChats' }"
+            >私信</router-link
+          >
         </div>
         <div class="notice_item">
           <i class="el-icon-chat-dot-round"></i>
-          <p>评论回复</p>
+          <router-link class="My-router-link" :to="{ path: '/myComments' }"
+            >回复</router-link
+          >
         </div>
         <div class="notice_item">
           <i class="iconfont icon-dianzan"></i>
-          <p>收到的赞</p>
+          <router-link class="My-router-link" :to="{ path: '/myLikes' }"
+            >收到的赞</router-link
+          >
+        </div>
+        <div class="notice_item">
+          <i class="iconfont icon-zhifu"></i>
+          <router-link class="My-router-link" :to="{ path: '/mySell' }"
+            >兑换消息</router-link
+          >
         </div>
         <div class="notice_item">
           <i class="iconfont icon-laba"></i>
-          <p>系统通知</p>
+          <router-link class="My-router-link" :to="{ path: '/sysNotice' }"
+            >系统通知</router-link
+          >
         </div>
       </div>
-      <div class="chatList">
-        <p>聊天列表</p>
-        <div class="messageList" @click="toChatRoom(i)" v-for="(item, i) in ChatList" :key="i">
-          <div class="headImage">
-            <img
-              src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
-              alt=""
-            />
-          </div>
-          <div class="dialogue">
-            <div class="name_time">
-              <div class="name">{{item.ToName}}</div>
-              <div class="time" v-text="toTime(item.msgList==undefined?undefined:item.msgList[item.msgList.length-1].CreateTime)"></div>
-            </div>
-            <div class="info">
-              <div class="content">{{item.msgList==undefined?'':item.msgList[item.msgList.length-1].ChatContent}}</div>
-              <div class="number"><span>1</span></div>
-            </div>
-          </div>
-        </div>
+      <div class="MsgRouterBox">
+        <router-view></router-view>
       </div>
     </div>
-
-    <!-- 分页器 -->
-    <!-- <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[1, 10, 100, 200]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="1"
-      >
-      </el-pagination>
-    </div> -->
   </div>
 </template>
 
 <script>
 export default {
+  name: "MessageView",
   created() {
     document.title = "资源共享--消息";
   },
@@ -75,22 +58,35 @@ export default {
   },
   methods: {
     toTime(time) {
-      if(time==undefined){
+      if (time == undefined) {
         return new Date().toLocaleString();
       }
       let t = new Date(time - 0).toLocaleString();
       return t;
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
+    // handleSizeChange(val) {
+    //   console.log(`每页 ${val} 条`);
+    // },
+    // handleCurrentChange(val) {
+    //   console.log(`当前页: ${val}`);
+    // },
     toChatRoom(i) {
-      this.$store.commit('saveChatListIndex',i);
+      this.$store.commit("saveChatListIndex", i);
       this.$router.push("/chat");
       console.log(i);
+    },
+    newMsg(item) {
+      let CLi = item;
+      // console.log(CLi);
+      let newMsgNum = 0;
+      if (CLi.msgList != null) {
+        CLi.msgList.forEach((item) => {
+          if (item.Readed == 0) {
+            newMsgNum++;
+          }
+        });
+      }
+      return newMsgNum;
     },
   },
 };
@@ -111,79 +107,26 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        position: relative;
         i {
           padding-top: 10px;
           // padding-bottom:-10px ;
           font-size: 40px;
           color: rgb(88, 184, 200);
+          padding-bottom: 20px;
           // margin: 20px 0 0 4px;
         }
-      }
-    }
-    .chatList {
-      margin-top: 20px;
-      // background-color: rgb(237, 190, 190);
-      p {
-        padding: 8px;
-      }
-      .messageList {
-        display: flex;
-        // justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #9c9c9c;
-        .headImage {
-          margin: 10px;
-          height: 50px;
-          width: 50px;
-          border-radius: 25px;
-          overflow: hidden;
-          img {
-            width: 100%;
-          }
-        }
-        .dialogue {
-          width: 720px;
-          .name_time {
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .name {
-              // padding-left: 10px;
-            }
-            .time {
-              color: #9c9c9c;
-              font-size: 10px;
-            }
-          }
-          .info {
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .content {
-              // margin-top: 6px;
-              // padding-left: 10px;
-              padding-top: 7px;
-              width: 95%;
-              color: #9c9c9c;
-              font-size: 13px;
-              overflow: hidden; /*对超出容器的部分强制截取，高度不确定则换行*/
-              text-overflow: ellipsis; /*显示省略符号来代表被修剪的文本。*/
-              white-space: nowrap; /*禁止换行*/
-            }
-            .number {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 20px;
-              height: 20px;
-              background-color: #ff679a;
-              font-size: 12px;
-              color: #f0f0f0;
-              border-radius: 10px;
-            }
-          }
+        .My-router-link {
+          // margin-right: 20px;
+          color: #000;
+          text-decoration: none;
+          position: absolute;
+          width: 80px;
+          /* height: 100px; */
+          top: 0;
+          /* vertical-align: text-top; */
+          padding-top: 80px;
+          text-align: center;
         }
       }
     }

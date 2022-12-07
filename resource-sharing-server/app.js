@@ -106,21 +106,21 @@ app.post('/upload', (req, res) => {
 })
 
 // ------------------------
-function gid() {
-    var id = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000
-    var have = false;
-    for (var i = 0; i < player.length; i++) {
-        if (player[i] == id.toString()) {
-            have = true;
-            break;
-        }
-    }
-    if (have) {
-        gid();
-    } else {
-        return id;
-    }
-}
+// function gid() {
+//     var id = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000
+//     var have = false;
+//     for (var i = 0; i < player.length; i++) {
+//         if (player[i] == id.toString()) {
+//             have = true;
+//             break;
+//         }
+//     }
+//     if (have) {
+//         gid();
+//     } else {
+//         return id;
+//     }
+// }
 
 // const SocketServer = require('ws').Server
 // const wss = new SocketServer({ server })  //搭建服务器
@@ -202,10 +202,10 @@ wss.on('connection', function connection(client, req) {
     client.on('message', function incoming(data) {
         //这是连接上发送过来的数据  唯一标识的phone
         let dt = JSON.parse(data)
-        // console.log(dt)
+        console.log(dt)
         //每个客户端都存上自己发来的phone做为唯一的id
         client.id = dt.uid
-        console.log(client.id);
+        console.log('client.id==',client.id);
         //连接上后就压进数组
         let oldIndex = -1;
         clients.forEach((item, i) => {

@@ -1,26 +1,16 @@
-<!--<template>
-  <div>chat</div>
-</template>
-
-<script>
-export default {};
-</script>
-
-<style lang="less" scoped>
-
-</style>-->
-
 <template>
-  <div class="chatRoomBox">
+  <div class="chatRoomBox" @mousewheel="UpChat">
     <div class="chatBox">
       <div class="friendNmae">{{ ChatListItem.ToName }}</div>
       <div class="chatListBox" :class="isW96">
+        <a id="ABottom" href="#chat" target="_self"></a>
         <ul>
           <li
             class="liItem"
-            v-for="item of ChatListItem.msgList"
+            v-for="(item,i) of ChatListItem.msgList"
             :key="item.chatId"
             :class="item.FromId == ChatListItem.FromId ? 'MyLi' : ''"
+            :id="i==ChatListItem.msgList.length-10?'chat':''"
           >
             <p>
               <span>{{
@@ -32,8 +22,12 @@ export default {};
               <span v-text="toTime(item.CreateTime)"></span>
             </p>
             <span class="msgBox">{{ item.ChatContent }}</span>
+            <span class="read" :class="item.Readed == 0 ? 'cheng' : 'hui'">{{
+              item.Readed == 0 ? "未读" : "已读"
+            }}</span>
           </li>
         </ul>
+        <!-- <div id="chat"></div> -->
       </div>
       <div class="sendChat">
         <el-input v-model="messageData.content"> </el-input>
@@ -52,11 +46,22 @@ export default {};
 // const ws = new WebSocket("ws://localhost:8008");
 
 export default {
-  name: "HomeView",
+  name: "ChatRoom",
   created() {
     let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
     this.FromId = userInfo.id;
     this.Username = userInfo.username;
+    this.$nextTick(() => {
+      ABottom.click();
+      console.log(21);
+    });
+  },
+  mounted() {
+    // alert(21);
+    // this.$nextTick(() => {
+    //   ABottom.click();
+    //   console.log(21);
+    // });
   },
   data() {
     return {
@@ -64,6 +69,9 @@ export default {
       msg: "",
       Username: "",
       msgList: [],
+      lastReaded: 0,
+      lastFromId: 0,
+      UpChatFlag: 1,
       messageData: {
         Pimg: "",
         Dimg: "",
@@ -79,9 +87,18 @@ export default {
   },
   computed: {
     ChatListItem() {
+      // console.log("tcp2");
       let ChatListItem =
         this.$store.state.ChatList[this.$store.state.ChatListIndex];
-      console.log(ChatListItem);
+      console.log(ChatListItem.msgList != undefined);
+      if (ChatListItem.msgList != undefined) {
+        // console.log("tcp3");
+        let lastChat = ChatListItem.msgList[ChatListItem.msgList.length - 1];
+        let LR = lastChat.Readed;
+        this.lastReaded = LR;
+        this.lastFromId = lastChat.FromId;
+        // console.log(this.hasNotRead);
+      }
       return ChatListItem;
     },
     isW96() {
@@ -154,6 +171,34 @@ export default {
       // this.msgList.push(res.data.chat);
       this.getChatList();
     },
+    // 变为已读
+    async UpChat() {
+      console.log(1);
+      if (
+        this.lastReaded == 0 &&
+        this.lastFromId == this.ChatListItem.ToId &&
+        this.UpChatFlag == 1
+      ) {
+        this.UpChatFlag = 0;
+        // console.log('this.UpChatFlag==',this.UpChatFlag);
+        let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+        const { data: res } = await this.$http.get("my/chat/UpChat", {
+          params: {
+            ToId: userInfo.id,
+            FromId: this.ChatListItem.ToId,
+          },
+        });
+        this.UpChatFlag = 1;
+        // console.log('this.UpChatFlag==',this.UpChatFlag);
+        console.log(res);
+        if (res.meta.status > 301) return this.$message.error(res.meta.message);
+        if (res.meta.status == 301) {
+          return this.$message.error(res.meta.message);
+        }
+        this.$message.success(res.meta.message);
+        this.getChatList();
+      }
+    },
     handleWsOpen(e) {
       //   console.log("open", e);
       console.log("open");
@@ -218,6 +263,15 @@ export default {
             background-color: #fff;
             border-radius: 10px;
           }
+          .read {
+            margin-left: 10px;
+          }
+          .hui {
+            color: #999;
+          }
+          .cheng {
+            color: #fca60b;
+          }
         }
         .MyLi {
           float: right;
@@ -231,11 +285,17 @@ export default {
             // text-align: right;
             float: right;
           }
+          .read {
+            float: right;
+            line-height: 40px;
+            padding-right: 10px;
+          }
         }
       }
     }
     .ws96 {
       width: 96.5%;
+      height: auto;
     }
     .sendChat {
       padding: 10px;

@@ -20,6 +20,7 @@ export default {
   // components:{
   //   ArticleList
   // },
+  name: "IndexView",
   data() {
     return {
       LunList: [],

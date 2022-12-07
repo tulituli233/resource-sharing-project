@@ -63,7 +63,9 @@
     </el-row>
     <!-- 内容 -->
     <el-row class="ContentBox">
-      <router-view></router-view>
+      <keep-alive include="AddArticle,MyInfo">
+        <router-view></router-view>
+      </keep-alive>
     </el-row>
     <!-- </el-card> -->
   </div>
@@ -71,6 +73,7 @@
 
 <script>
 export default {
+  name: "MyView",
   created() {
     document.title = "资源共享--我的";
   },
@@ -116,7 +119,7 @@ export default {
     }
   }
 }
-.ContentBox{
+.ContentBox {
   margin-top: 20px;
   padding: 10px;
   width: 800px;

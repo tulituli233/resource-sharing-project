@@ -79,7 +79,7 @@ export default {
     width: 100%;
     .MOLItem {
       position: relative;
-      background-color: #ccc;
+      background-color: #ebebeb;
       padding: 10px;
       margin-bottom: 10px;
       .TitleBox {
@@ -105,7 +105,7 @@ export default {
         right: 0;
         float: right;
         padding: 5px 20px;
-        background-color: gold;
+        background-color: #FCA60B;
         font-size: 30px;
         color: #fff;
       }

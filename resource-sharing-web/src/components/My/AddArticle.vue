@@ -95,6 +95,7 @@
 
 <script>
 export default {
+  name: "AddArticle",
   data() {
     return {
       addFrom: {
@@ -254,10 +255,10 @@ export default {
   created() {
     document.title = "资源共享--我要分享";
   },
-  computed:{
-     CateList(){
-      return this.$store.state.CateList
-     }
+  computed: {
+    CateList() {
+      return this.$store.state.CateList;
+    },
   },
   methods: {
     async addArticle() {
@@ -269,7 +270,7 @@ export default {
       });
       //   console.log(this.addFrom);
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
-      let tags=this.addFrom.tags.join(',')+',';
+      let tags = this.addFrom.tags.join(",") + ",";
       const { data: res } = await this.$http.post("/my/article/add", {
         IssuerId: userInfo.id,
         IssuerName: userInfo.username,
@@ -280,8 +281,8 @@ export default {
         CateNum: this.addFrom.cate[this.addFrom.cate.length - 1],
         Content: this.addFrom.content,
         LianJie: this.addFrom.LianJie,
-        CreateTime: Date.now()+'',
-        ArticleState:1,
+        CreateTime: Date.now() + "",
+        ArticleState: 1,
       });
       //   console.log(res);
       if (res.meta.status !== 200) return this.$message.error(res.meta.message);
@@ -335,11 +336,11 @@ export default {
 .tag-item {
   margin-left: 10px;
 }
-.titleBOx{
+.titleBOx {
   padding: 10px;
   background-color: #007acc;
 }
-.btnAdd{
+.btnAdd {
   margin: 10px;
   float: right;
 }

@@ -27,6 +27,7 @@
 
 <script>
 export default {
+  name: "MyInfo",
   data() {
     var validatePhone = (rule, value, callback) => {
       //正则表达式
@@ -95,7 +96,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.titleBOx{
+.titleBOx {
   padding: 10px;
   background-color: #007acc;
 }

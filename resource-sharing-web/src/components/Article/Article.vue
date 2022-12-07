@@ -193,6 +193,7 @@ export default {
       const { data: res } = await this.$http.post("/my/userinfo/addnote", {
         note: {
           UserId: userInfo.id,
+          UserName: userInfo.username,
           WriterId: this.Article.IssuerId,
           WriterName: this.Article.IssuerName,
           ArticleId: this.Article.ArticleId,
@@ -237,6 +238,7 @@ export default {
             SellerId: this.Article.IssuerId,
             SellerName: this.Article.IssuerName,
             BuyerId: userInfo.id,
+            BuyerName: userInfo.username,
             ArticleId: this.Article.ArticleId,
             Title: this.Article.Title,
             CreateTime: Date.now() + "",
@@ -401,7 +403,7 @@ export default {
         color: pink;
       }
       .gold {
-        color: gold;
+        color: #FCA60B;
       }
     }
   }

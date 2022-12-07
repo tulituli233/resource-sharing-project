@@ -66,6 +66,7 @@
 
 <script>
 export default {
+  name: "CateView",
   created() {
     document.title = "资源共享--分类";
     this.getArticleList();

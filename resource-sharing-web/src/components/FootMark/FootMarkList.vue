@@ -56,7 +56,7 @@ export default {
   margin-top: 20px;
   width: 100%;
   .fmItem {
-    background-color: #ccc;
+    background-color: #ebebeb;
     padding: 10px;
     position: relative;
     margin-bottom: 10px;

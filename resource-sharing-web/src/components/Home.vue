@@ -84,7 +84,9 @@
       </el-aside>
       <!-- 右侧 -->
       <el-main :style="`height:${newHeight}px`">
-        <router-view></router-view>
+        <keep-alive include="CateView,IndexView,FollowView,MyView">
+          <router-view></router-view>
+        </keep-alive>
         <!-- 分享榜单 -->
         <div class="recommendBox">
           <Recommend></Recommend>
@@ -111,7 +113,7 @@ export default {
     // this.Nav=this.$store.state.Nav
   },
   mounted() {
-    console.log("loo");
+    // console.log("loo");
     const ws = new WebSocket("ws://localhost:8008");
     ws.addEventListener("open", this.handleWsOpen.bind(this), false);
     ws.addEventListener("close", this.handleWsClose.bind(this), false);
@@ -122,6 +124,7 @@ export default {
   },
   data() {
     return {
+      ws: "",
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       pstr: "请输入内容",
@@ -219,20 +222,31 @@ export default {
       // console.log(22);
       // alert(22)
       // 方案二成功
-      let nowMsg = JSON.parse(e.data);
-      console.log(nowMsg);
-      let oldChatList = this.$store.state.ChatList;
-      oldChatList.forEach((item) => {
-        if (item.ToId == nowMsg.FromId) {
-          item.msgList.push(nowMsg);
-          // console.log("push");
-        }
-        // console.log("item.ToId==nowMsg.FromId", item.ToId == nowMsg.FromId);
-        // console.log("item.ToId", item.ToId);
-        // console.log("nowMsg.FromId", nowMsg.FromId);
-      });
+      let Data = JSON.parse(e.data);
+      if (Data.type == 0) {
+        let nowMsg = Data.data;
+        console.log(nowMsg);
+        let oldChatList = this.$store.state.ChatList;
+        oldChatList.forEach((item) => {
+          if (item.ToId == nowMsg.FromId) {
+            item.msgList.push(nowMsg);
+            // console.log("push");
+          }
+        });
+        this.$store.commit("saveChatList", oldChatList);
+        console.log("tcp1");
+      } else if (Data.type == 1) {
+        console.log(Data.data);
+        // 方案1
+        this.getChatList();
+      }else if (Data.type == 2) {
+        // 系统广播
+        console.log(Data.data);
+        // 方案1
+        this.getChatList();
+      }
+
       // console.log("oldChatList==", oldChatList);
-      this.$store.commit("saveChatList", oldChatList);
       // console.log("ChatList==", this.$store.state.ChatList);
     },
     // 获取私聊数据
