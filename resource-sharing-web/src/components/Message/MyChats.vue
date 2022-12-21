@@ -8,24 +8,22 @@
       :key="i"
     >
       <div class="headImage">
-        <img
+        <!-- <img
           src="https://cdn.anime-pictures.net/previews/b35/b359040bcd84548d5f587d0ad0764f21_cp.png.avif"
           alt=""
-        />
+        /> -->
+        <Avatar :UserId="item.ToId"></Avatar>
       </div>
       <div class="dialogue">
         <div class="name_time">
           <div class="name">{{ item.ToName }}</div>
-          <div
-            class="time"
-            v-text="
-              toTime(
-                item.msgList == undefined
-                  ? undefined
-                  : item.msgList[item.msgList.length - 1].CreateTime
-              )
-            "
-          ></div>
+          <div class="time">
+            {{
+              item.msgList == undefined
+                ? item.CreateTime
+                : item.msgList[item.msgList.length - 1].CreateTime | dateFormat
+            }}
+          </div>
         </div>
         <div class="info">
           <div class="content">
@@ -45,7 +43,9 @@
 </template>
 
 <script>
+import Avatar from '../My/Avatar.vue';
 export default {
+  components: { Avatar },
   name: "MyChats",
   created() {
     document.title = "资源共享--私信列表";

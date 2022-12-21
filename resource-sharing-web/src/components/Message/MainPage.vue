@@ -1,7 +1,14 @@
 <template>
   <div class="MainPageBox">
     <div class="headBox">
-      <div class="headImg">头像</div>
+      <div class="headImg">
+        <Avatar
+          :HeadImgUrl="MPD.HeadImgUrl"
+          :Username="MPD.username"
+          :height="70"
+          :width="70"
+        ></Avatar>
+      </div>
       <div class="name">{{ MainPageData.IssuerName }}</div>
       <div class="Data">
         <div class="fll Followers">
@@ -49,6 +56,7 @@
 
 <script>
 export default {
+  name: "MainPage",
   created() {
     document.title = "资源共享--主页";
     // let IssuerId = this.$route.query.IssuerId;
@@ -57,12 +65,14 @@ export default {
     // this.IssuerName=IssuerName;
     // console.log(IssuerId);
     // console.log(IssuerName);
-    this.MainPageData = this.$store.state.MainPageData;
-    let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
-    this.userInfo = userInfo;
-    this.isFollow();
-    this.getMPD();
-    this.getMyShare();
+    this.inIt();
+    // 通$on接收传过来的事件
+    this.$bus.$on("openDemandList", () => {
+      this.inIt();
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off("openDemandList");
   },
   data() {
     return {
@@ -77,6 +87,14 @@ export default {
     };
   },
   methods: {
+    inIt() {
+      this.MainPageData = this.$store.state.MainPageData;
+      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+      this.userInfo = userInfo;
+      this.isFollow();
+      this.getMPD();
+      this.getMyShare();
+    },
     toMyInfo() {
       this.$router.push("/myInfo");
     },
@@ -142,7 +160,8 @@ export default {
       this.isfollow = 0;
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        return this.$message.error(res.meta.message);
+        return;
+        this.$message.error(res.meta.message);
       }
       this.isfollow = 1;
     },
@@ -188,7 +207,8 @@ export default {
       // alert(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
       if (res.meta.status == 301) {
-        return this.$message.error(res.meta.message);
+        return;
+        this.$message.error(res.meta.message);
       }
       //   this.$message.success(res.meta.message);
       this.ArticleList = res.data.alist;
@@ -203,7 +223,7 @@ export default {
     overflow: hidden;
     .headImg {
       float: left;
-      width: 60px;
+      width: 70px;
     }
     .name {
       float: left;

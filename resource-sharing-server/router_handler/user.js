@@ -52,6 +52,7 @@ exports.login = (req, res) => {
             userInfo: {
                 id,
                 username: results[0].Username,
+                HeadImgUrl: results[0].HeadImgUrl,
             },
             token: 'Bearer ' + tokenStr
         })

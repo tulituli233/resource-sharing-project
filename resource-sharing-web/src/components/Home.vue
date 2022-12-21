@@ -30,7 +30,19 @@
       </div>
       <div class="UserBox">
         <div class="avdiv" @click="toMainPage">
-          <el-avatar size="large" class="avatar">{{ username }}</el-avatar>
+          <!-- <el-avatar
+            size="large"
+            class="avatar"
+            v-if="userInfo.HeadImgUrl !== '无'"
+            :src="`uploads/avatar/${userInfo.HeadImgUrl}`"
+          ></el-avatar>
+          <el-avatar v-else size="large" class="avatar">{{
+            userInfo.username
+          }}</el-avatar> -->
+          <Avatar
+            :HeadImgUrl="userInfo.HeadImgUrl"
+            :Username="userInfo.username"
+          ></Avatar>
         </div>
         <el-button type="info" @click="tuichu" class="el-icon-switch-button"
           >退出</el-button
@@ -102,6 +114,8 @@ import tagsView from "../layout/TagsView.vue";
 export default {
   name: "Home",
   created() {
+    let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+    this.userInfo = userInfo;
     this.getMenuList();
     this.newHeight = window.innerHeight - 150;
     window.onresize = () => {
@@ -125,8 +139,7 @@ export default {
   data() {
     return {
       ws: "",
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      userInfo: {},
       pstr: "请输入内容",
       menulist: [],
       iconsObj: {
@@ -176,10 +189,10 @@ export default {
     };
   },
   computed: {
-    username() {
-      let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
-      return userInfo.username;
-    },
+    // username() {
+    //   let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+    //   return userInfo.username;
+    // },
   },
   components: {
     tagsView,
@@ -192,7 +205,14 @@ export default {
         IssuerId: userInfo.id,
         IssuerName: userInfo.username,
       });
-      this.$router.push(`/mainpage`);
+      // this.$router.push(`/mainpage`);
+      this.$router.push({
+        path: "/mainpage",
+        query: {
+          t: Date.now(),
+        },
+      });
+      this.$bus.$emit("openDemandList");
     },
     handleWsOpen(e) {
       //   console.log("open", e);
@@ -239,7 +259,7 @@ export default {
         console.log(Data.data);
         // 方案1
         this.getChatList();
-      }else if (Data.type == 2) {
+      } else if (Data.type == 2) {
         // 系统广播
         console.log(Data.data);
         // 方案1
@@ -333,9 +353,11 @@ const token = window.sessionStorage.getItem("token");
       width: 500px;
     }
     .UserBox {
-      .avatar {
+      .avdiv {
         margin-right: 20px;
-        background-color: #3a8ee6;
+        .avatar {
+          background-color: #3a8ee6;
+        }
       }
     }
   }

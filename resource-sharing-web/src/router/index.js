@@ -17,6 +17,7 @@ import MyHistory from '../components/My/MyHistory.vue'
 import MyInfo from '../components/My/MyInfo.vue'
 import MyOrder from '../components/My/MyOrder.vue'
 import MyShare from '../components/My/MyShare.vue'
+import MyAvatar from '../components/My/MyAvatar.vue'
 
 //message
 import myChats from '../components/Message/MyChats.vue'
@@ -57,6 +58,7 @@ const routes = [
           { path: '/myInfo', component: MyInfo, name: '我的资料', fullPath: '/home/index/myInfo', meta: { title: '我的资料' }, },
           { path: '/myOrder', component: MyOrder, name: '我的购买', fullPath: '/home/index/myOrder', meta: { title: '我的购买' }, },
           { path: '/myShare', component: MyShare, name: '我的分享', fullPath: '/home/index/myShare', meta: { title: '我的分享' }, },
+          { path: '/MyAvatar', component: MyAvatar, name: '设置头像', fullPath: '/home/index/MyAvatar', meta: { title: '设置头像' }, },
         ]
       },
       { path: '/article', component: ArticleView, name: '文章详情', fullPath: '/home/article', meta: { title: '文章详情' }, },

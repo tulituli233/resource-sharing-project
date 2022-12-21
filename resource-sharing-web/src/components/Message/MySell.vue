@@ -14,7 +14,7 @@
           >
         </div>
         <div class="Article">{{ item.Title }}</div>
-        <div class="time" v-text="toTime(item.CreateTime)"></div>
+        <div class="time">{{item.CreateTime | dateFormat}}</div>
         <div class="priceBox">+{{ item.price }}</div>
       </div>
     </div>

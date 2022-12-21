@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3146902 */
-  src: url('iconfont.woff2?t=1669299411051') format('woff2'),
-       url('iconfont.woff?t=1669299411051') format('woff'),
-       url('iconfont.ttf?t=1669299411051') format('truetype');
+  src: url('iconfont.woff2?t=1670431520875') format('woff2'),
+       url('iconfont.woff?t=1670431520875') format('woff'),
+       url('iconfont.ttf?t=1670431520875') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-xin:before {
+  content: "\e945";
+}
+
+.icon-youzhi:before {
+  content: "\e604";
+}
+
+.icon-youzhi1:before {
+  content: "\e633";
+}
+
+.icon-youzhi2:before {
+  content: "\e61b";
+}
+
+.icon-zhifeiji:before {
+  content: "\e681";
+}
+
+.icon-24gf-paperPlane:before {
+  content: "\e967";
+}
+
+.icon-youshi_youzhi:before {
+  content: "\e69c";
+}
+
+.icon-NEW-copy:before {
+  content: "\e889";
+}
+
+.icon-huore:before {
+  content: "\e602";
+}
+
+.icon-fenxiang1:before {
+  content: "\e603";
+}
+
+.icon-zuixingengxin:before {
+  content: "\e61e";
 }
 
 .icon-laba:before {

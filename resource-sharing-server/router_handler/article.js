@@ -30,7 +30,7 @@ exports.alist = (req, res) => {
     db.query(sqlGetArt, data, (err, results) => {
         // console.log(results);
         if (err) return res.cc(err);
-        if (results.length < 1) return res.cc('没有所需文章数据！');
+        if (results.length < 1) return res.cc('没有所需文章数据！',301);
         //(i-1)*j:slice||j~i*j-1截取数组
         let i = req.body.pagenum;
         // console.log("i="+i);
@@ -269,10 +269,10 @@ exports.updata = (req, res) => {
 exports.getMyShare = (req, res) => {
     const User = req.query;
     console.log(User);
-    sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where IssuerId=? and ArticleState=1';
+    let sqlSelectA = 'select ArticleId,IssuerId,IssuerName,Title,Views,Likes,Stars,Comments,Grade,BuyNum,Price,CateNum,CateName,Tags,FirstImgUrl,Brief,ArticleState,CreateTime,Content from article where IssuerId=? and ArticleState=1';
     db.query(sqlSelectA, User.IssuerId, (err, results) => {
         if (err) return res.cc(err);
-        if (results.length == 0) return res.cc('你还没有分享资源', 301);
+        if (results.length <= 0) return res.cc('你还没有分享资源', 301);
         let arts = results;
         let total = results.length;
         res.cc('查找我的分享成功！', 200, { alist: arts, total })
@@ -282,13 +282,65 @@ exports.getMyShare = (req, res) => {
 exports.getFAList = (req, res) => {
     const FList = req.body;
     console.log(FList);
-    selFAList = 'select * from (select * from article where IssuerId in (?)) as allA order by ArticleId desc limit ?;';
+    let selFAList = 'select * from (select * from article where IssuerId in (?)) as allA order by ArticleId desc limit ?;';
     db.query(selFAList, [FList.FidArray, FList.TopNum], (err, results) => {
         if (err) return res.cc(err);
-        if (results.length == 0) return res.cc('暂时没有动态！', 301);
+        if (results.length <= 0) return res.cc('暂时没有动态！', 301);
         console.log(results);
         let arts = results;
         let total = results.length;
         res.cc('动态获取成功！', 200, { FAList: arts, total })
     })
 }
+
+// 推荐栏
+exports.RecommendList = (req, res) => {
+    const FList = req.query;
+    // console.log(FList);
+    let RecommendList = [];
+    let sel1 = 'select * from article order by Views desc,Likes desc,Stars desc,Comments desc limit 10;';
+    db.query(sel1, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length <= 0) return res.cc('火热分享获取失败!', 301);
+        RecommendList.push(results);
+        let sel2 = 'select * from article order by Grade desc,Likes desc,Stars desc,Comments desc limit 10;';
+        db.query(sel2, (err, results) => {
+            if (err) return res.cc(err);
+            if (results.length <= 0) return res.cc('优质分享获取失败!', 301);
+            RecommendList.push(results);
+            let sel3 = 'select * from (select * from article order by ArticleId desc limit 100) as NewA order by Views desc,Likes desc,Stars desc,Comments desc limit 10;';
+            db.query(sel3, (err, results) => {
+                if (err) return res.cc(err);
+                if (results.length <= 0) return res.cc('最新分享获取失败!', 301);
+                RecommendList.push(results);
+                return res.cc('推荐栏数据成功！', 200, { RecommendList })
+            })
+        })
+    })
+}
+
+// 首页数据
+exports.IndexData = (req, res) => {
+    const FList = req.query;
+    // console.log(FList);
+    let sel1 = 'select * from article order by Views desc,Likes desc,Stars desc,Comments desc limit 6;';
+    db.query(sel1, (err, results) => {
+        if (err) return res.cc(err);
+        if (results.length <= 0) return res.cc('首页数据获取失败!', 301);
+        return res.cc('首页数据获取成功！', 200, { IndexData: results })
+    })
+}
+// 设置头像
+exports.setAvatar = (req, res) => {
+    console.log('req==',req);
+    const file = req.file
+    const user = req.user
+    console.log('user.UserId==',user.id);
+    let sqlDel = 'update user set HeadImgUrl=? where UserId=?';
+    db.query(sqlDel, [file.filename,user.id], (err, results) => {
+        if (err) return res.cc(err);
+        if (results.affectedRows !== 1) return res.cc('头像设置失败！', 301);
+        return res.cc('头像设置成功！', 200)
+    })
+}
+

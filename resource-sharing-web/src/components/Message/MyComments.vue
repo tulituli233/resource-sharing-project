@@ -14,7 +14,7 @@
           }}</span>
         </div>
         <div class="content">{{ item.CommentContent }}</div>
-        <div class="time" v-text="toTime(item.CreateTime)"></div>
+        <div class="time">{{ item.CreateTime | dateFormat }}</div>
       </div>
     </div>
     <div v-else class="noBox">暂时没有数据</div>
@@ -36,10 +36,6 @@ export default {
     };
   },
   methods: {
-    toTime(time) {
-      let t = new Date(time - 0).toLocaleString();
-      return t;
-    },
     async toArticle(ArticleId, IssuerId, IssuerName) {
       // this.getArticle(ArticleId);
       let ArticleInfo = {

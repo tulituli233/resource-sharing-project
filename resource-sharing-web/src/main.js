@@ -8,6 +8,8 @@ import store from './store'
 // Vue.prototype.socket=io('http://localhost:8888');
 // const ws = new WebSocket("ws://localhost:8008");
 // Vue.prototype.$ws=ws;
+// main.js 将$bus挂载在原型上
+Vue.prototype.$bus = new Vue();
 
 import './assets/css/global.css'
 import './assets/icon/iconfont.css'
@@ -27,6 +29,8 @@ import Recommend from './components/Recommend.js'
 Vue.use(Recommend);
 import ChatRoom from './components/Message/ChatRoom.js'
 Vue.use(ChatRoom);
+import Avatar from './components/My/Avatar.js'
+Vue.use(Avatar);
 
 //导入富文本编辑器样式
 import 'quill/dist/quill.core.css' // import styles
@@ -34,35 +38,39 @@ import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.config.productionTip = false;
-axios.defaults.baseURL='http://localhost:3838'
+axios.defaults.baseURL = 'http://localhost:3838'
 // interceptors拦截器，请求拦截
-axios.interceptors.request.use(config=>{
+axios.interceptors.request.use(config => {
   //在请求头上挂载token
-  config.headers.Authorization=window.sessionStorage.getItem('token')||'';
+  config.headers.Authorization = window.sessionStorage.getItem('token') || '';
   // alert(config)
   return config
 })
-Vue.prototype.$http=axios;
+Vue.prototype.$http = axios;
 //组件的三种全局挂载方式
-Vue.component('tree-table',TreeTable);
+Vue.component('tree-table', TreeTable);
 Vue.use(VueQuillEditor);
 // Vue.prototype.$message=Message
 // Vue.component('DragTable',DragTable);
 
 
 //全局filter过滤器，时间格式转换
-Vue.filter('dateFormat',function(originVal){
-  const dt= new Date(originVal*1000);
-  // const dt= new Date(originVal);
-  const y=dt.getFullYear();
-  const m=(dt.getMonth()+1+'').padStart(2,'0');//padStart开头填充
-  const d=(dt.getDate()+'').padStart(2,'0');
-
-  const hh=(dt.getHours()+'').padStart(2,'0');
-  const mm=(dt.getMinutes()+'').padStart(2,'0');
-  const ss=(dt.getSeconds()+'').padStart(2,'0');
-
-  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+Vue.filter('dateFormat', function toTime(time) {
+  let nowTime = Date.now();
+  let t = Math.ceil((nowTime - time) / 1000);
+  // console.log(t);
+  let ts = "";
+  if (t < 60) ts = `${t}秒前`;
+  else if (t >= 60 && t < 3600) {
+    ts = `${Math.ceil(t / 60)}分钟前`;
+  } else if (t >= 3600 && t < 3600 * 24) {
+    ts = `${Math.ceil(t / 3600)}小时前`;
+  } else if (t >= 3600 * 24 && t < 3600 * 48) {
+    ts = `昨天`;
+  } else {
+    ts = new Date(time - 0).toLocaleString('zh', { hour12: false });
+  }
+  return ts;
 })
 
 new Vue({

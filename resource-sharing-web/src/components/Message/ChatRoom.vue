@@ -2,15 +2,19 @@
   <div class="chatRoomBox" @mousewheel="UpChat">
     <div class="chatBox">
       <div class="friendNmae">{{ ChatListItem.ToName }}</div>
-      <div class="chatListBox" :class="isW96">
+      <div
+        class="chatListBox"
+        :class="isW96"
+        v-if="ChatListItem.msgList != undefined"
+      >
         <a id="ABottom" href="#chat" target="_self"></a>
         <ul>
           <li
             class="liItem"
-            v-for="(item,i) of ChatListItem.msgList"
+            v-for="(item, i) of ChatListItem.msgList"
             :key="item.chatId"
             :class="item.FromId == ChatListItem.FromId ? 'MyLi' : ''"
-            :id="i==ChatListItem.msgList.length-10?'chat':''"
+            :id="i == ChatListItem.msgList.length - 10 ? 'chat' : ''"
           >
             <p>
               <span>{{
@@ -28,6 +32,9 @@
           </li>
         </ul>
         <!-- <div id="chat"></div> -->
+      </div>
+      <div class="chatListBox NoChatList ws96" v-else>
+        私聊已经建立，现在你们可以交流了~~~
       </div>
       <div class="sendChat">
         <el-input v-model="messageData.content"> </el-input>
@@ -52,7 +59,9 @@ export default {
     this.FromId = userInfo.id;
     this.Username = userInfo.username;
     this.$nextTick(() => {
-      ABottom.click();
+      if (this.ChatListItem.msgList != undefined) {
+        ABottom.click();
+      }
       console.log(21);
     });
   },
@@ -90,7 +99,7 @@ export default {
       // console.log("tcp2");
       let ChatListItem =
         this.$store.state.ChatList[this.$store.state.ChatListIndex];
-      console.log(ChatListItem.msgList != undefined);
+      // console.log(ChatListItem.msgList != undefined);
       if (ChatListItem.msgList != undefined) {
         // console.log("tcp3");
         let lastChat = ChatListItem.msgList[ChatListItem.msgList.length - 1];
@@ -134,7 +143,7 @@ export default {
   },
   methods: {
     toTime(time) {
-      let t = new Date(time - 0).toLocaleString();
+      let t = new Date(time - 0).toLocaleString("zh", { hour12: false });
       return t;
     },
     async getChatList() {
@@ -311,6 +320,12 @@ export default {
         color: #fff;
         background-color: #12b7f5;
       }
+    }
+    .NoChatList {
+      text-align: center;
+      padding-top: 100px;
+      padding-bottom: 100px;
+      font-size: 20px;
     }
   }
 }

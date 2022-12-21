@@ -9,9 +9,10 @@
           :key="i"
           @click="toMainPage(item.WriterId, item.WriterName)"
         >
-          <el-avatar size="large" class="avatar">{{
+          <!-- <el-avatar size="large" class="avatar">{{
             item.WriterName
-          }}</el-avatar>
+          }}</el-avatar> -->
+          <Avatar :UserId="item.WriterId"></Avatar>
           <div class="Wname">{{ item.WriterName }}</div>
         </div>
       </div>
@@ -96,15 +97,15 @@ export default {
       }
       this.$message.success(res.meta.message);
       console.log(res.data.FAList);
-      let alists = [];
-      if (typeof res.data.FAList[0].Tags == "string") {
-        alists = res.data.FAList.map((item) => {
-          item.Tags = item.Tags.split(",");
-          item.Tags.pop();
-          return item;
-        });
-      }
-      this.FArticleList = alists;
+      // let alists = [];
+      // if (typeof res.data.FAList[0].Tags == "string") {
+      //   alists = res.data.FAList.map((item) => {
+      //     item.Tags = item.Tags.split(",");
+      //     item.Tags.pop();
+      //     return item;
+      //   });
+      // }
+      this.FArticleList = res.data.FAList;
     },
   },
 };

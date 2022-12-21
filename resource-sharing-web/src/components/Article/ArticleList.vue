@@ -1,56 +1,58 @@
 <template>
   <div class="ArticleListBox">
-    <div
-      class="listitem"
-      v-for="(item, i) in ArticleList"
-      :key="i"
-      @click="toArticle(item.ArticleId, item.IssuerId, item.IssuerName)"
-    >
-      <div class="ImgBox">
-        <img :src="item.FirstImgUrl" alt="" />
-        <el-rate
-          :value="item.Grade / 20"
-          disabled
-          show-score
-          text-color="#ff9900"
-          :score-template="item.Grade + ''"
-        >
-        </el-rate>
-      </div>
-      <div class="articleInfo">
-        <div class="IssuerBox">
-          <span class="spanName">{{ item.IssuerName }}</span>
+    <div v-if="ArticleList.length !== undefined && ArticleList.length !== 0">
+      <div
+        class="listitem"
+        v-for="(item, i) in NewAL"
+        :key="i"
+        @click="toArticle(item.ArticleId, item.IssuerId, item.IssuerName)"
+      >
+        <div class="ImgBox">
+          <img :src="item.FirstImgUrl" alt="" />
+          <el-rate
+            :value="item.Grade / 20"
+            disabled
+            show-score
+            text-color="#ff9900"
+            :score-template="item.Grade + ''"
+          >
+          </el-rate>
         </div>
-        <span class="TitleSpan">{{ item.Title }}</span>
-        <div class="brief">简介:{{ item.Brief }}</div>
-        <div class="TagBox">
-          标签:
-          <el-tag
-            size="mini"
-            type="warning"
-            class="eltagItem"
-            v-for="(item1, i1) in item.Tags"
-            :key="i1"
-            >{{ item1 }}
-          </el-tag>
+        <div class="articleInfo">
+          <div class="IssuerBox">
+            <span class="spanName">{{ item.IssuerName }}</span>
+          </div>
+          <span class="TitleSpan">{{ item.Title }}</span>
+          <div class="brief">简介:{{ item.Brief }}</div>
+          <div class="TagBox">
+            标签:
+            <el-tag
+              size="mini"
+              type="warning"
+              class="eltagItem"
+              v-for="(item1, i1) in item.Tags"
+              :key="i1"
+              >{{ item1 }}
+            </el-tag>
+          </div>
         </div>
+        <div class="cateBox">{{ item.CateName }}</div>
+        <div class="priceBox" :class="item.Price == 0 ? 'cGreen' : 'cYellow'">
+          {{ item.Price == 0 ? "免费" : `$${item.Price}` }}
+        </div>
+        <el-row class="IconRow"
+          ><span class="iconfont icon-dianzan"></span>{{ item.Likes
+          }}<span class="viewsIcon el-icon-view"></span>{{ item.Views
+          }}<span class="viewsIcon el-icon-chat-dot-square"></span
+          >{{ item.Comments }}
+          <span v-if="item.Price != 0">
+            <span class="iconfont viewsIcon icon-zhifu"></span>{{ item.BuyNum }}
+          </span>
+        </el-row>
+        <span class="spanTime" v-text="toTime(item.CreateTime)"></span>
       </div>
-      <div class="cateBox">{{ item.CateName }}</div>
-      <div class="priceBox" :class="item.Price == 0 ? 'cGreen' : 'cYellow'">
-        {{ item.Price == 0 ? "免费" : `$${item.Price}` }}
-      </div>
-      <el-row class="IconRow"
-        ><span class="iconfont icon-dianzan"></span>{{ item.Likes
-        }}<span class="viewsIcon el-icon-view"></span>{{ item.Views
-        }}<span class="viewsIcon el-icon-chat-dot-square"></span
-        >{{ item.Comments }}
-        <span v-if="item.Price != 0">
-          <span class="iconfont viewsIcon icon-zhifu"></span>{{ item.BuyNum }}
-        </span>
-      </el-row>
-      <span class="spanTime" v-text="toTime(item.CreateTime)"></span>
     </div>
-
+    <div v-else class="notDataTips">{{ notDataTips }}</div>
     <!-- <div class="hasSelect" v-if="queryInfo.hasSelect">
       <div :a="inputTopVal" :c="CateVal"></div>
     </div> -->
@@ -76,6 +78,27 @@ export default {
     ArticleList: {
       type: Array,
     },
+    notDataTips: {
+      type: String,
+      default: "暂时没有数据！",
+    },
+  },
+  computed: {
+    NewAL: {
+      get() {
+        // console.log('this.ArticleList',this.ArticleList);
+        let alists = [];
+        if (typeof this.ArticleList[0].Tags == "string") {
+          alists = this.ArticleList.map((item) => {
+            item.Tags = item.Tags.split(",");
+            item.Tags.pop();
+            return item;
+          });
+        }
+        console.log("alists", alists);
+        return alists;
+      },
+    },
   },
   data() {
     return {
@@ -100,35 +123,6 @@ export default {
     // });
     // console.log(111);
     // console.log(this.alist);
-  },
-  computed: {
-    // inputTopVal() {
-    //   console.log(321);
-    //   // this.queryInfo.mark = this.$store.state.inputTopVal;
-    //   // this.queryInfo.mark
-    //   this.getArticleList();
-    //   return this.queryInfo.mark;
-    // },
-    // CateVal() {
-    //   console.log(321);
-    //   // this.queryInfo.mark = this.$store.state.inputTopVal;
-    //   // this.queryInfo.mark
-    //   this.getArticleList();
-    //   return this.queryInfo.cate;
-    // },
-    // alists() {
-    //   // let indexArticleList = this.$store.state.indexArticleList;
-    //   // console.log(typeof indexArticleList[0].Tags);
-    //   let alists = [];
-    //   if (typeof indexArticleList[0].Tags == "string") {
-    //     alists = indexArticleList.map((item) => {
-    //       item.Tags = item.Tags.split(",");
-    //       item.Tags.pop();
-    //       return item;
-    //     });
-    //   }
-    //   return alists;
-    // },
   },
   methods: {
     toTime(time) {
@@ -292,6 +286,9 @@ export default {
       right: 0;
       padding: 5px;
     }
+  }
+  .notDataTips{
+    text-align: center;
   }
 }
 </style>

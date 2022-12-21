@@ -41,14 +41,17 @@
         </div>
       </div>
       <div class="midCateBox">分类：{{ selectName }}</div>
-      <div v-if="ArticleList.length">
-        <ArticleList :ArticleList="ArticleList"></ArticleList>
+      <div>
+        <ArticleList
+          :ArticleList="ArticleList"
+          :notDataTips="`暂时没有关于 ${
+            queryInfo.mark == '' ? selectName : queryInfo.mark
+          } 的数据`"
+        ></ArticleList>
       </div>
-      <div class="noDataBox" v-else>
-        <!-- 暂时没有关于<span style="color: red">{{ queryInfo.mark}}</span
-        >的文章 -->
+      <!-- <div class="noDataBox" v-else>
         这里还什么都没有呢~
-      </div>
+      </div> -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -92,7 +95,7 @@ export default {
     markstr() {
       let inpVal = this.$route.query.inpVal;
       let mark = inpVal == undefined ? "" : inpVal;
-      console.log(inpVal);
+      // console.log(inpVal);
       if (inpVal !== undefined) {
         this.queryInfo.cate = "";
         // this.selectName = "全部";
@@ -110,31 +113,33 @@ export default {
     erjiCate(CateNum, CateName) {
       this.queryInfo.cate = CateNum;
       this.selectName = CateName;
-      // this.getArticleList();
+      this.getArticleList();
     },
     async getArticleList() {
       const { data: res } = await this.$http.post(
         "/my/article/alist",
         this.queryInfo
       );
-
+      console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
+      console.log(666);
       if (res.meta.status == 301) {
         this.ArticleList = [];
+        console.log(555);
         return;
         this.$message.error(res.meta.message);
       }
       // this.$message.success(res.meta.message);
       console.log(res.data.alist);
-      let alists = [];
-      if (typeof res.data.alist[0].Tags == "string") {
-        alists = res.data.alist.map((item) => {
-          item.Tags = item.Tags.split(",");
-          item.Tags.pop();
-          return item;
-        });
-      }
-      this.ArticleList = alists;
+      // let alists = [];
+      // if (typeof res.data.alist[0].Tags == "string") {
+      //   alists = res.data.alist.map((item) => {
+      //     item.Tags = item.Tags.split(",");
+      //     item.Tags.pop();
+      //     return item;
+      //   });
+      // }
+      this.ArticleList = res.data.alist;
       this.totle = res.data.total;
       // this.$store.dispatch("indexArticleListAys", res.data.alist);
       // this.$store.commit("indexArticleList", res.data.alist);

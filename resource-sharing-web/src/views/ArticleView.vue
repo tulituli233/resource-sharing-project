@@ -1,7 +1,7 @@
 <template>
   <div class="ArticleViewBox">
     <div class="ArticleLeftBox">
-      <Article></Article>
+      <Article :ArticleInfo="ArticleInfo" ref="mychild"></Article>
       <Comment></Comment>
     </div>
     <div class="ArticleRightBox"></div>
@@ -12,6 +12,23 @@
 export default {
   created() {
     document.title = "资源共享--文章详情";
+  },
+  computed: {
+    ArticleInfo: {
+      get() {
+        this.clickParent();
+        return this.$store.state.ArticleInfo;
+      },
+    },
+  },
+  methods: {
+    clickParent() {
+      try {
+        this.$refs.mychild.parentHandleclick("hhh");
+      } catch (error) {
+        // console.log('error==',error);
+      }
+    },
   },
 };
 </script>

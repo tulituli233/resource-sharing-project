@@ -36,7 +36,9 @@
         >
         </el-rate>
       </div>
-      <div class="Myrate" v-if="Article.LianJie == null">需要兑换后，才能评分哦~！</div>
+      <div class="Myrate" v-if="Article.LianJie == null">
+        需要兑换后，才能评分哦~！
+      </div>
       <div class="Myrate" v-else>
         我的评分：
         <el-rate
@@ -83,17 +85,16 @@
         </span>
       </div>
     </div>
-
-    <div class="dscBox">
-      <!-- <div class="like">点赞</div>
-      <div class="star">收藏</div>
-      <div class="comment">评论</div> -->
-    </div>
   </div>
 </template>
 
 <script>
 export default {
+  created() {
+    // document.title = "资源共享--文章详情";
+    this.getArticle();
+    this.isFollow();
+  },
   data() {
     return {
       Article: {},
@@ -104,14 +105,29 @@ export default {
       Note: "",
     };
   },
-  created() {
-    // document.title = "资源共享--文章详情";
-    this.getArticle();
-    this.isFollow();
+  props: {
+    ArticleInfo: {
+      type: Object,
+      default: () => {
+        return {
+          ArticleId: 7,
+          IssuerId: 4,
+          IssuerName: "98movie",
+        };
+      },
+    },
+    ArticleList: {
+      type: Array,
+    },
   },
+  // updated() {
+  //   console.log(5555);
+  //   // this.getArticle();
+  //   // this.isFollow();
+  // },
   computed: {
     // Article() {
-    //   return this.$store.state.Article;
+    //   return this.Article
     // },
     MyGrade: {
       get() {
@@ -124,7 +140,17 @@ export default {
       },
     },
   },
+  watch: {
+    ts() {
+      console.log(1);
+    },
+  },
   methods: {
+    parentHandleclick(e) {
+      // console.log(e);
+      this.getArticle();
+      this.isFollow();
+    },
     toTime(time) {
       let t = new Date(time - 0).toLocaleString();
       return t;
@@ -133,7 +159,7 @@ export default {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       const { data: res } = await this.$http.get("/my/article/geta", {
         params: {
-          ArticleId: this.$store.state.ArticleInfo.ArticleId,
+          ArticleId: this.ArticleInfo.ArticleId,
           BuyerId: userInfo.id,
         },
       });
@@ -153,7 +179,7 @@ export default {
       const { data: res } = await this.$http.get("/my/userinfo/isfollow", {
         params: {
           FollowerId: userInfo.id,
-          WriterId: this.$store.state.ArticleInfo.IssuerId,
+          WriterId: this.ArticleInfo.IssuerId,
         },
       });
       console.log(res);
@@ -171,12 +197,12 @@ export default {
     },
     async addFollow() {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
-      if (userInfo.id == this.$store.state.ArticleInfo.IssuerId)
+      if (userInfo.id == this.ArticleInfo.IssuerId)
         return this.$message.error("不能关注自己");
       const { data: res } = await this.$http.post("/my/userinfo/follow", {
         FollowerId: userInfo.id,
-        WriterId: this.$store.state.ArticleInfo.IssuerId,
-        WriterName: this.$store.state.ArticleInfo.IssuerName,
+        WriterId: this.ArticleInfo.IssuerId,
+        WriterName: this.ArticleInfo.IssuerName,
         FollowState: this.isfollow == 0 ? 1 : 0,
         CreateTime: Date.now() + "",
       });
@@ -292,7 +318,7 @@ export default {
       let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
       let params = {
         UserId: userInfo.id,
-        ArticleId: this.$store.state.ArticleInfo.ArticleId,
+        ArticleId: this.ArticleInfo.ArticleId,
       };
       console.log(params);
       const { data: res } = await this.$http.get("/my/userinfo/getNote", {
@@ -403,7 +429,7 @@ export default {
         color: pink;
       }
       .gold {
-        color: #FCA60B;
+        color: #fca60b;
       }
     }
   }

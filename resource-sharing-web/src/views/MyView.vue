@@ -59,6 +59,14 @@
             >
           </div>
         </div>
+        <div class="linkItemBox">
+          <div class="iconBox"><i class="el-icon-edit"></i></div>
+          <div class="linkBox">
+            <router-link class="My-router-link" :to="{ path: '/MyAvatar' }"
+              >设置头像</router-link
+            >
+          </div>
+        </div>
       </div>
     </el-row>
     <!-- 内容 -->

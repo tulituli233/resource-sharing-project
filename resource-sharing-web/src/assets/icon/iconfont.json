@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6010800",
+      "name": "新",
+      "font_class": "xin",
+      "unicode": "e945",
+      "unicode_decimal": 59717
+    },
+    {
+      "icon_id": "2863",
+      "name": "优质",
+      "font_class": "youzhi",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "1159915",
+      "name": "优质",
+      "font_class": "youzhi1",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "3267417",
+      "name": "优质",
+      "font_class": "youzhi2",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "6684369",
+      "name": "纸飞机",
+      "font_class": "zhifeiji",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "7568873",
+      "name": "24gf-paperPlane",
+      "font_class": "24gf-paperPlane",
+      "unicode": "e967",
+      "unicode_decimal": 59751
+    },
+    {
+      "icon_id": "15560028",
+      "name": "优势_优质",
+      "font_class": "youshi_youzhi",
+      "unicode": "e69c",
+      "unicode_decimal": 59036
+    },
+    {
+      "icon_id": "9009443",
+      "name": "NEW",
+      "font_class": "NEW-copy",
+      "unicode": "e889",
+      "unicode_decimal": 59529
+    },
+    {
+      "icon_id": "201559",
+      "name": "火热",
+      "font_class": "huore",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1718318",
+      "name": "分享",
+      "font_class": "fenxiang1",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "6561003",
+      "name": "最新更新",
+      "font_class": "zuixingengxin",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
       "icon_id": "201560",
       "name": "喇叭",
       "font_class": "laba",
