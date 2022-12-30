@@ -43,12 +43,19 @@
 </template>
 
 <script>
-import Avatar from '../My/Avatar.vue';
+import Avatar from "../My/Avatar.vue";
 export default {
   components: { Avatar },
   name: "MyChats",
   created() {
     document.title = "资源共享--私信列表";
+    let userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+    this.userInfo = userInfo;
+  },
+  data() {
+    return {
+      userInfo: {},
+    };
   },
   computed: {
     ChatList() {
@@ -80,7 +87,7 @@ export default {
       let newMsgNum = 0;
       if (CLi.msgList != null) {
         CLi.msgList.forEach((item) => {
-          if (item.Readed == 0) {
+          if (item.Readed == 0 && item.FromId != this.userInfo.id) {
             newMsgNum++;
           }
         });

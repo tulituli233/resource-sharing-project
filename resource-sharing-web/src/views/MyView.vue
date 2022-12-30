@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="linkItemBox">
-          <div class="iconBox"><i class="el-icon-s-order"></i></div>
+          <div class="iconBox"><i class="el-icon-share"></i></div>
           <div class="linkBox">
             <router-link class="My-router-link" :to="{ path: '/myShare' }"
               >我的分享</router-link
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="linkItemBox">
-          <div class="iconBox"><i class="el-icon-edit"></i></div>
+          <div class="iconBox"><i class="el-icon-user"></i></div>
           <div class="linkBox">
             <router-link class="My-router-link" :to="{ path: '/MyAvatar' }"
               >设置头像</router-link
@@ -97,7 +97,7 @@ export default {
     .linkItemBox {
       overflow: hidden;
       float: left;
-      padding: 10px 20px;
+      padding: 10px 26px;
       position: relative;
       .linkBox {
         margin: 0 auto;
@@ -110,7 +110,7 @@ export default {
           width: 80px;
           /* height: 100px; */
           top: 0;
-          left: 10px;
+          left: 17px;
           /* vertical-align: text-top; */
           padding-top: 80px;
           text-align: center;

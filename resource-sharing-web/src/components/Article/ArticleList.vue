@@ -95,7 +95,7 @@ export default {
             return item;
           });
         }
-        console.log("alists", alists);
+        // console.log("alists", alists);
         return alists;
       },
     },

@@ -45,7 +45,9 @@
         <ArticleList
           :ArticleList="ArticleList"
           :notDataTips="`暂时没有关于 ${
-            queryInfo.mark == '' ? selectName : queryInfo.mark
+            queryInfo.mark == ''
+              ? selectName
+              : queryInfo.mark + `(${selectName})`
           } 的数据`"
         ></ArticleList>
       </div>
@@ -62,7 +64,7 @@
         :total="totle"
       >
       </el-pagination>
-      <div :m="markstr"></div>
+      <!-- <div :m="markstr"></div> -->
     </div>
   </div>
 </template>
@@ -75,7 +77,18 @@ export default {
     this.getArticleList();
     // let inpVal = this.$route.query.inpVal;
     // this.queryInfo.mark = inpVal == undefined ? "" : inpVal;
-    // console.log(inpVal);
+    // console.log("资源共享--分类");
+    this.$bus.$on("getArticleList", () => {
+      let inpVal = this.$route.query.inpVal;
+      let mark = inpVal == undefined ? "" : inpVal;
+      this.queryInfo.cate = "";
+      this.selectName = "全部";
+      this.queryInfo.mark = mark;
+      this.getArticleList();
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off("getArticleList");
   },
   data() {
     return {
@@ -92,22 +105,22 @@ export default {
     };
   },
   computed: {
-    markstr() {
-      let inpVal = this.$route.query.inpVal;
-      let mark = inpVal == undefined ? "" : inpVal;
-      // console.log(inpVal);
-      if (inpVal !== undefined) {
-        this.queryInfo.cate = "";
-        // this.selectName = "全部";
-        this.queryInfo.mark = mark;
-      } else {
-      }
-      // console.log(queryInfo);
-      this.getArticleList();
-      // console.log(21);
-      // this.queryInfo=queryInfo;
-      return mark;
-    },
+    // markstr() {
+    //   let inpVal = this.$route.query.inpVal;
+    //   let mark = inpVal == undefined ? "" : inpVal;
+    //   // console.log(inpVal);
+    //   if (inpVal !== undefined) {
+    //     this.queryInfo.cate = "";
+    //     // this.selectName = "全部";
+    //     this.queryInfo.mark = mark;
+    //     this.getArticleList();
+    //   } else {
+    //   }
+    //   // console.log(queryInfo);
+    //   console.log(21);
+    //   // this.queryInfo=queryInfo;
+    //   return mark;
+    // },
   },
   methods: {
     erjiCate(CateNum, CateName) {
@@ -122,10 +135,10 @@ export default {
       );
       console.log(res);
       if (res.meta.status > 301) return this.$message.error(res.meta.message);
-      console.log(666);
+      // console.log(666);
       if (res.meta.status == 301) {
         this.ArticleList = [];
-        console.log(555);
+        // console.log(555);
         return;
         this.$message.error(res.meta.message);
       }

@@ -18,7 +18,7 @@ export default {
   created() {
     if (this.UserId !== 0) {
       this.getMPD();
-      console.log(333);
+      // console.log(333);
     } else {
       this.userInfo.HeadImgUrl = this.HeadImgUrl;
       this.userInfo.Username = this.Username;
@@ -78,7 +78,7 @@ export default {
       //   this.$message.success(res.meta.message);
       this.userInfo.HeadImgUrl = res.data.userInfo.HeadImgUrl;
       this.userInfo.Username = res.data.userInfo.username;
-      console.log("res.data.userInfo.username;", res.data.userInfo.username);
+      // console.log("res.data.userInfo.username;", res.data.userInfo.username);
     },
   },
 };

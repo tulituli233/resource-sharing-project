@@ -143,11 +143,11 @@ export default {
       pstr: "请输入内容",
       menulist: [],
       iconsObj: {
-        999: "el-icon-user-solid",
-        998: "el-icon-s-tools",
-        997: "el-icon-s-goods",
-        996: "el-icon-s-order",
-        995: "el-icon-s-marketing",
+        999: "el-icon-s-home",
+        998: "el-icon-s-promotion",
+        997: "el-icon-menu",
+        996: "el-icon-chat-line-square",
+        995: "el-icon-user-solid",
         994: "el-icon-s-claim",
       },
       isCollapse: false,
@@ -324,6 +324,7 @@ export default {
       let istr = this.inputTopVal;
       this.inputTopVal = "";
       this.pstr = istr;
+      this.$bus.$emit("getArticleList");
     },
   },
 };
@@ -404,5 +405,8 @@ const token = window.sessionStorage.getItem("token");
     top: 60px;
     left: 200px;
   }
+}
+.el-menu--vertical{
+  display: none;
 }
 </style>
